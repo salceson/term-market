@@ -1,0 +1,12 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+<div class="inner cover">
+    <h2 class="cover-heading">Welcome to TermMarket{% if user.is_authenticated %}, {{ user.get_full_name }}{% endif %}!</h2>
+    <p class="lead">
+        Here you can exchange terms you're not satisfied with to create your dreamed schedule. Our solver  will make
+        sure that you get term you want if it's only possible. Start by creating your own exchange offer or by browsing
+        already made offers. Each full hour solver will be started, please keep in mind that during that time you won't
+        be able to edit or remove your offers.
+    </p>
+</div>
+{% endblock %}

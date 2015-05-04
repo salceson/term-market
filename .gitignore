@@ -1,0 +1,5 @@
+.idea/
+*.py[oc]
+*.sqlite3
+department-list.csv
+TermMarket/local_settings.py
