@@ -1,0 +1,25 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+<div class="inner cover">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        <tbody>
+{% for term in object_list %}
+        <tr>
+            <td>{{ term.subject }}</td>
+            <td>{{ term.teacher }}</td>
+            <td>{{ term.start_time }} {{ term.week }}</td>
+            <td>{{ term.room }}</td>
+        </tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

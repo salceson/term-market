@@ -6,7 +6,7 @@ class User(AbstractUser):
     transcript_no = models.CharField('Transcript number', max_length=6, blank=True, null=True)
     internal_id = models.CharField('Internal ID',
                                    help_text='Used to match OAuth external user to their TermMarket user account.',
-                                   max_length=20, unique=True, blank=True, null=True)
+                                   max_length=20, blank=True, null=True)
 
 
 class Enrollment(models.Model):
@@ -53,3 +53,15 @@ class Term(models.Model):
     end_time = models.DateTimeField()
     department_group = models.PositiveSmallIntegerField(blank=True, null=True)
     external_id = models.BigIntegerField('External ID', help_text='ID of this term in Enroll-me', blank=True, null=True)
+    students = models.ManyToManyField('User', related_name='terms')
+
+    def __unicode__(self):
+        return unicode(self.subject) + ' - ' + self.start_time.strftime('%H:%M') + ' ' + unicode(self.week) + ' - ' + \
+            unicode(self.teacher)
+
+
+class Offer(models.Model):
+    term = models.ForeignKey('Term')
+    donor = models.ForeignKey('User', related_name='donated')
+    recipient = models.ForeignKey('User', related_name='received', null=True, blank=True)
+    bait = models.CharField(max_length=255, blank=True)

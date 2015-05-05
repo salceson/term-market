@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
-from term_market.models import User, Enrollment, Subject, Teacher, Term
+from term_market.models import User, Enrollment, Subject, Teacher, Term, Offer
 
 
 class UserAdmin(OriginalUserAdmin):
@@ -15,6 +15,12 @@ class UserAdmin(OriginalUserAdmin):
 class TermAdmin(admin.ModelAdmin):
     list_display = ('id', 'subject', 'teacher', 'start_time', 'week')
     list_display_links = ('id', 'subject')
+    filter_horizontal = ('students', )
+
+
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('id', 'term', 'donor', 'recipient')
+    list_display_links = ('id', 'term')
 
 
 admin.site.register(User, UserAdmin)
@@ -22,3 +28,4 @@ admin.site.register(Enrollment)
 admin.site.register(Subject)
 admin.site.register(Teacher)
 admin.site.register(Term, TermAdmin)
+admin.site.register(Offer, OfferAdmin)

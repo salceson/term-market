@@ -3,8 +3,10 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import TemplateView, RedirectView, ListView
 from requests_oauthlib import OAuth2Session
+
+from .models import Offer
 
 
 class LoginRequiredMixin(object):
@@ -52,3 +54,12 @@ def oauth_callback(request):
         auth.login(request, user)
         return redirect(settings.LOGIN_REDIRECT_URL)
     raise PermissionDenied('Not authenticated')
+
+
+class ScheduleView(ListView):
+    def get_queryset(self):
+        return self.request.user.terms.all()
+
+
+class OfferListView(ListView):
+    model = Offer

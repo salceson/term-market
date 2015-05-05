@@ -87,7 +87,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl'
 
 TIME_ZONE = 'UTC'
 
@@ -133,5 +133,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'term_market.auth_backends.IIETOAuthBackend',
 )
+
+GRAPPELLI_ADMIN_TITLE = 'TermMarket'
 
 from local_settings import *

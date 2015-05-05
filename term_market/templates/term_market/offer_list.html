@@ -1,0 +1,29 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+<div class="inner cover">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Donor</th>
+            <th>Bait</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+{% for offer in object_list %}
+        <tr>
+            <td>{{ offer.term.subject }}</td>
+            <td>{{ offer.term.teacher }}</td>
+            <td>{{ offer.term.start_time }}</td>
+            <td>{{ offer.donor }}</td>
+            <td>{{ offer.bait }}</td>
+            <td><input type="button" class="btn btn-default" value="Accept"></td>
+        </tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
