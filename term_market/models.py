@@ -56,8 +56,8 @@ class Term(models.Model):
     students = models.ManyToManyField('User', related_name='terms')
 
     def __unicode__(self):
-        return unicode(self.subject) + ' - ' + self.start_time.strftime('%H:%M') + ' ' + unicode(self.week) + ' - ' + \
-            unicode(self.teacher)
+        return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
+            ' - ' + unicode(self.teacher)
 
 
 class Offer(models.Model):
