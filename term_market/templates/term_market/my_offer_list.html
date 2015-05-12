@@ -25,8 +25,8 @@
                     <td>{{ e.start_time }}</td>
                     <td>{{ offer.bait }}</td>
                     <td>
-                        <input type="button" class="btn btn-warning" value="Edit offer">
                             <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
+                            <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
                     </td>
                 </tr>
             {% endfor %}

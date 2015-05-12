@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -66,3 +67,6 @@ class Offer(models.Model):
     donor = models.ForeignKey('User', related_name='donated')
     bait = models.CharField(max_length=255, blank=True)
     is_available = models.BooleanField(default=True)
+
+    def return_absolute_url(self):
+        return reverse('offers')

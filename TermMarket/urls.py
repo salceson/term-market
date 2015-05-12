@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
-    MyOfferDeleteView
+    MyOfferDeleteView, MyOfferUpdateView
 
 urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),
     url(r'^my_offers/$', MyOfferView.as_view(), name='my_offers'),
     url(r'^offers/(?P<pk>[0-9]+)/delete$', MyOfferDeleteView.as_view(), name='offer_delete'),
+    url(r'^offers/(?P<pk>[0-9]+)/update', MyOfferUpdateView.as_view(), name='offer_update'),
     url(r'^offers/$', OfferListView.as_view(), name='offers'),
     url(r'^accounts/login/$', LoginView.as_view(), name='login'),
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
