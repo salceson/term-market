@@ -19,8 +19,8 @@ class TermAdmin(admin.ModelAdmin):
 
 
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('id', 'term', 'donor', 'recipient')
-    list_display_links = ('id', 'term')
+    list_display = ('id', 'offered_term', 'donor', 'is_available')
+    list_display_links = ('id', 'offered_term')
 
 
 admin.site.register(User, UserAdmin)
