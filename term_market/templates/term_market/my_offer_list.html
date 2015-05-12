@@ -26,7 +26,8 @@
                     <td>{{ offer.bait }}</td>
                     <td>
                         <input type="button" class="btn btn-warning" value="Edit offer">
-                        <input type="button" class="btn btn-danger" value="Delete offer"></td>
+                            <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
+                    </td>
                 </tr>
             {% endfor %}
         {% endfor %}

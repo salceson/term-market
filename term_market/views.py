@@ -2,8 +2,9 @@ from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, RedirectView, ListView
+from django.views.generic import TemplateView, RedirectView, ListView, DeleteView
 from requests_oauthlib import OAuth2Session
 
 from .models import Offer
@@ -70,3 +71,8 @@ class OfferListView(ListView):
 class MyOfferView(ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
+
+
+class MyOfferDeleteView(DeleteView):
+    model = Offer
+    success_url = '/my_offers'
