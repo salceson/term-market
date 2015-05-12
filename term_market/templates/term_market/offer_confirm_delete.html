@@ -1,0 +1,8 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+    <form action="" method="post">{% csrf_token %}
+        <p class="lead">Are you sure to remove: {{ object.offered_term }}</p>
+        <input type="submit" value="Confirm deletion" class="btn btn-danger">
+        <a href="{% url 'my_offers' %}" class="btn btn-default">Cancel</a>
+    </form>
+{% endblock %}

@@ -4,25 +4,28 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Date</th>
-            <th>Donor</th>
+            <th colspan="4">Offered</th>
+            <th colspan="3">Wanted</th>
             <th>Bait</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-{% for offer in object_list %}
-        <tr>
-            <td>{{ offer.term.subject }}</td>
-            <td>{{ offer.term.teacher }}</td>
-            <td>{{ offer.term.start_time }}</td>
-            <td>{{ offer.donor }}</td>
-            <td>{{ offer.bait }}</td>
-            <td><input type="button" class="btn btn-default" value="Accept"></td>
-        </tr>
-{% endfor %}
+        {% for offer in object_list %}
+            {% for e in offer.wanted_terms.all %}
+                <tr>
+                    <td>{{ offer.donor }}</td>
+                    <td>{{ offer.offered_term.subject }}</td>
+                    <td>{{ offer.offered_term.teacher }}</td>
+                    <td>{{ offer.offered_term.start_time }}</td>
+                    <td>{{ e.subject }}</td>
+                    <td>{{ e.teacher }}</td>
+                    <td>{{ e.start_time }}</td>
+                    <td>{{ offer.bait}}</td>
+                    <td><input type="button" class="btn btn-success" value="Accept offer"></td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 </div>

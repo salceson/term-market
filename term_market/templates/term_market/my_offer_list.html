@@ -1,0 +1,37 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+<div class="inner cover">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="4">Offered</th>
+            <th colspan="3">Wanted</th>
+            <th>Bait</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for offer in object_list %}
+            {% for e in offer.wanted_terms.all %}
+                <tr>
+                    {% if forloop.first %}
+                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.donor }}</td>
+                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.subject }}</td>
+                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.teacher }}</td>
+                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.start_time }}</td>
+                    {% endif %}
+                    <td>{{ e.subject }}</td>
+                    <td>{{ e.teacher }}</td>
+                    <td>{{ e.start_time }}</td>
+                    <td>{{ offer.bait }}</td>
+                    <td>
+                            <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
+                            <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
