@@ -61,7 +61,8 @@ class Term(models.Model):
 
 
 class Offer(models.Model):
-    term = models.ForeignKey('Term')
+    offered_term = models.ForeignKey('Term')
+    wanted_terms = models.ManyToManyField('Term', related_name='offers')
     donor = models.ForeignKey('User', related_name='donated')
-    recipient = models.ForeignKey('User', related_name='received', null=True, blank=True)
     bait = models.CharField(max_length=255, blank=True)
+    is_available = models.BooleanField(default=True)
