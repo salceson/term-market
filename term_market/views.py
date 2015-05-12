@@ -21,6 +21,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
 
 class LoginView(RedirectView):
+    permanent = False
+
     def get_redirect_url(self, *args, **kwargs):
         oauth = OAuth2Session(settings.OAUTH_CLIENT_ID,
                               redirect_uri=settings.OAUTH_REDIRECT_URI,
