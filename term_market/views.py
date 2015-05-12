@@ -65,3 +65,8 @@ class ScheduleView(ListView):
 
 class OfferListView(ListView):
     model = Offer
+
+
+class MyOfferView(ListView):
+    model = Offer
+    template_name = 'term_market/my_offer_list.html'
