@@ -7,9 +7,8 @@ from django.views.generic import TemplateView
 from .forms import ImportForm
 
 
-
-# TODO: Proper file handling
 def handle_uploaded_file(f):
+    # TODO: Proper file handling
     with open('/tmp/dupa.txt', 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
