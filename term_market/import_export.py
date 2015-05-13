@@ -8,7 +8,6 @@ from .forms import ImportForm
 
 
 
-
 # TODO: Proper file handling
 def handle_uploaded_file(f):
     with open('/tmp/dupa.txt', 'wb+') as destination:
@@ -32,7 +31,8 @@ def import_terms(request):
 
 class ImportSuccessful(TemplateView):
     template_name = "term_market/import_success.html"
-    context = {'title': 'Import'}
 
     def get_context_data(self, **kwargs):
-        return {'title': 'Import'}
+        context = super(ImportSuccessful, self).get_context_data(**kwargs)
+        context.update({u'title': u'Import'})
+        return context
