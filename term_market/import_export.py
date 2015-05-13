@@ -1,17 +1,29 @@
 # coding=utf-8
+
+import hashlib
+import os
+import time
+from os.path import dirname
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context_processors import csrf
 from django.views.generic import TemplateView
+from django.conf import settings
 
 from .forms import ImportForm
 
 
 def handle_uploaded_file(f):
-    # TODO: Proper file handling
-    with open('/tmp/dupa.txt', 'wb+') as destination:
+    time_hash = hashlib.sha1()
+    time_hash.update(str(time.time()))
+    directory = settings.TEMP_DIR
+    filename = dirname(directory) + '/' + time_hash.hexdigest() + '_terms.txt'
+    with open(filename, 'wb+') as dest:
         for chunk in f.chunks():
-            destination.write(chunk)
+            dest.write(chunk)
+    # TODO: Proper file handling
+    os.remove(filename)
 
 
 def import_terms(request):
