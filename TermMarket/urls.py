@@ -22,6 +22,8 @@ from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, Of
 urlpatterns = [
     url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/import/success/$', 'term_market.import_export.import_success', name='import_success'),
+    url(r'^admin/import/$', 'term_market.import_export.import_terms', name='import_terms'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),
