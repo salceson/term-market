@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django_extensions',
     'grappelli',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,5 +137,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 GRAPPELLI_ADMIN_TITLE = 'TermMarket'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 from local_settings import *
