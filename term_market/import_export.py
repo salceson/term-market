@@ -1,11 +1,11 @@
 # coding=utf-8
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.template.context_processors import csrf
 from django.views.generic import TemplateView
 
 from .forms import ImportForm
+
 
 
 
@@ -34,5 +34,5 @@ class ImportSuccessful(TemplateView):
     template_name = "term_market/import_success.html"
     context = {'title': 'Import'}
 
-    def get(self, request, *args, **kwargs):
-        return render_to_response(self.template_name, self.context, context_instance=RequestContext(request))
+    def get_context_data(self, **kwargs):
+        return {'title': 'Import'}
