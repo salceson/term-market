@@ -37,11 +37,11 @@ def import_terms(request):
     else:
         form = ImportForm()
     params.update({'form': form, 'title': 'Import'})
-    return render_to_response('term_market/import.html', params)
+    return render_to_response('term_market/admin/import.html', params)
 
 
 class ImportSuccessful(TemplateView):
-    template_name = "term_market/import_success.html"
+    template_name = "term_market/admin/import_success.html"
 
     def get_context_data(self, **kwargs):
         context = super(ImportSuccessful, self).get_context_data(**kwargs)
