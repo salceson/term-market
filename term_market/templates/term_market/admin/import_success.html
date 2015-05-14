@@ -1,6 +1,7 @@
 {% extends 'admin/base_site.html' %}
 {# BEGIN: Fix the horrid '>' in breadcumbs in grappelli admin base #}
 {% load i18n grp_tags %}
+{% load staticfiles %}
 {% block breadcrumbs %}
     <ul>
         <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
@@ -26,10 +27,13 @@
                             setTimeout(checkTask, 500);
                         } else {
                             if (!data['success']) {
-                                $("#processing").html("Import failed!");
-                                {#                                $("#processing").css("")#}
+                                $("#processing").html(
+                                        '<i class="fa fa-exclamation-triangle"></i> Import failed!'
+                                ).attr("class", "alert alert-danger");
                             } else {
-                                $("#processing").html("Import successful!");
+                                $("#processing").html(
+                                        '<i class="fa fa-check-circle"></i> Import successful!'
+                                ).attr("class", "alert alert-success");
                             }
                         }
                     });
@@ -42,10 +46,16 @@
 {% endblock %}
 {% block extrastyle %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/`>
 {% endblock %}
 {% block content %}
-    <p>Upload successful.</p>
+    <p class="alert alert-info">
+        <i class="fa fa-info-circle"></i>
+        Upload successful.
+    </p>
     <p id="processing" class="alert alert-info">
+        <i class="fa fa-info-circle"></i>
         Your file is being processed now. Please wait...
+        <i class="fa fa-spinner fa-spin"></i>
     </p>
 {% endblock %}

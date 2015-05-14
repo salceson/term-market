@@ -1,5 +1,6 @@
 {% extends 'admin/base_site.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 {# BEGIN: Fix the horrid '>' in breadcumbs in grappelli admin base #}
 {% load i18n grp_tags %}
 {% block breadcrumbs %}
@@ -13,11 +14,17 @@
 {# END: Fix the horrid '>' in breadcumbs in grappelli admin base #}
 {% block extrastyle %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 {% endblock %}
 {% block content %}
+    <p class="alert alert-danger">
+        <i class="fa fa-exclamation-triangle"></i>
+        <strong>Important!</strong>
+        Importing terms <strong>will remove all offers, term assignments and terms</strong> from enrollment!
+    </p>
     <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
         {{ form|crispy }}
-        <a href="/admin" class="btn btn-danger">Powrót</a>
-        <input type="submit" value="Import" class="btn btn-primary"/>
+        <a href="/admin" class="grp-button grp-delete-link">Powrót</a>
+        <input type="submit" value="Import" class="grp-button grp-default"/>
     </form>
 {% endblock %}
