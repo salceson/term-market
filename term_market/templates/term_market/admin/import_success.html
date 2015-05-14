@@ -1,7 +1,6 @@
 {% extends 'admin/base_site.html' %}
 {# BEGIN: Fix the horrid '>' in breadcumbs in grappelli admin base #}
 {% load i18n grp_tags %}
-{% load staticfiles %}
 {% block breadcrumbs %}
     <ul>
         <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
@@ -46,7 +45,7 @@
 {% endblock %}
 {% block extrastyle %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/`>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/`>
 {% endblock %}
 {% block content %}
     <p class="alert alert-info">
