@@ -10,6 +10,39 @@
     </ul>
 {% endblock %}
 {# END: Fix the horrid '>' in breadcumbs in grappelli admin base #}
+{% block extrahead %}
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+                var task_id = '{{ task }}';
+
+                function checkTask() {
+                    $.ajax({
+                        url: '/admin/import/check/' + task_id + '/',
+                        method: 'get'
+                    }).done(function (data) {
+                        console.log(data);
+                        if (!data['finished']) {
+                            setTimeout(checkTask, 500);
+                        } else {
+                            if (!data['success']) {
+                                $("#processing").html("Import failed!");
+                                {#                                $("#processing").css("")#}
+                            } else {
+                                $("#processing").html("Import successful!");
+                            }
+                        }
+                    });
+                }
+
+                setTimeout(checkTask, 500);
+            });
+        })(grp.jQuery);
+    </script>
+{% endblock %}
 {% block content %}
-    Import successful.
+    <p>Upload successful.</p>
+    <p id="processing" class="alert alert-info">
+        Your file is being processed now. Please wait...
+    </p>
 {% endblock %}

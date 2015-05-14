@@ -1,13 +1,11 @@
 # coding=utf-8
 
 import hashlib
-import os
 import time
 from os.path import dirname
 
-from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
 
 from .forms import ImportTermsForm
 from .tasks import import_terms_task
@@ -26,24 +24,34 @@ def handle_uploaded_file(f, suffix):
 
 
 def import_terms(request):
+    context = {'title': 'Import terms'}
     if request.method == 'POST':
         form = ImportTermsForm(request.POST, request.FILES)
         if form.is_valid():
             filename = handle_uploaded_file(request.FILES['file'], '_terms.txt')
             result = import_terms_task.apply_async(args=(filename, form.cleaned_data['enrollment']))
-            print result
-            os.remove(filename)
-            return HttpResponseRedirect('/admin/import/success/')
+            task_id = result.task_id
+            context.update({'task': str(task_id)})
+            return render(request, 'term_market/admin/import_success.html', context)
     else:
         form = ImportTermsForm()
-    context = {'form': form, 'title': 'Import terms'}
+    context.update({'form': form})
     return render(request, 'term_market/admin/import_terms.html', context)
 
 
-class ImportSuccessful(TemplateView):
-    template_name = "term_market/admin/import_success.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(ImportSuccessful, self).get_context_data(**kwargs)
-        context.update({'title': 'Import terms'})
-        return context
+def import_check(_, task=None):
+    if not task:
+        return JsonResponse(
+            {'status': 'error', 'msg': 'Wrong task id'}
+        )
+    try:
+        task_result = import_terms_task.AsyncResult(task)
+    except:
+        return JsonResponse(
+            {'status': 'error', 'msg': 'Wrong task id'}
+        )
+    finished = task_result.ready()
+    success = False if not finished else task_result.get()
+    return JsonResponse(
+        {'status': 'ok', 'finished': finished, 'success': success}
+    )

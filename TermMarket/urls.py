@@ -18,14 +18,14 @@ from django.contrib import admin
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
     MyOfferDeleteView, MyOfferUpdateView
-from term_market.import_export import ImportSuccessful
 
 
 urlpatterns = [
     url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
-    url(r'^admin/import/success/$', ImportSuccessful.as_view(), name='import_success'),
     url(r'^admin/import/$', 'term_market.import_export.import_terms', name='import_terms'),
+    url(r'^admin/import/check/(?P<task>[a-zA-Z0-9\-]+)/$', 'term_market.import_export.import_check',
+        name='import_check'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),
