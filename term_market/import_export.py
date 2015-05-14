@@ -44,12 +44,7 @@ def import_check(_, task=None):
         return JsonResponse(
             {'status': 'error', 'msg': 'Wrong task id'}
         )
-    try:
-        task_result = import_terms_task.AsyncResult(task)
-    except:
-        return JsonResponse(
-            {'status': 'error', 'msg': 'Wrong task id'}
-        )
+    task_result = import_terms_task.AsyncResult(task)
     finished = task_result.ready()
     success = False if not finished else task_result.get()
     return JsonResponse(
