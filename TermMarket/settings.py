@@ -42,8 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'term_market',
-    'djcelery',
     'kombu.transport.django',
+    'djcelery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,6 +115,10 @@ LOGIN_REDIRECT_URL = 'index'
 
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 BROKER_URL = 'django://'
+
+import djcelery
+
+djcelery.setup_loader()
 
 import os
 

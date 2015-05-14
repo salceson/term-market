@@ -8,33 +8,36 @@ from os.path import dirname
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.conf import settings
 
-from .forms import ImportForm
+from .forms import ImportTermsForm
+from .tasks import import_terms_task
 
 
-def handle_uploaded_file(f):
+def handle_uploaded_file(f, suffix):
     time_hash = hashlib.sha1()
     time_hash.update(str(time.time()))
-    directory = settings.TEMP_DIR
-    filename = dirname(directory) + '/' + time_hash.hexdigest() + '_terms.txt'
+    # directory = settings.TEMP_DIR
+    directory = '/tmp/'
+    filename = dirname(directory) + '/' + time_hash.hexdigest() + suffix
     with open(filename, 'wb+') as dest:
         for chunk in f.chunks():
             dest.write(chunk)
-    # TODO: Proper file handling
-    os.remove(filename)
+    return filename
 
 
 def import_terms(request):
     if request.method == 'POST':
-        form = ImportForm(request.POST, request.FILES)
+        form = ImportTermsForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
+            filename = handle_uploaded_file(request.FILES['file'], '_terms.txt')
+            result = import_terms_task.apply_async(args=(filename, form.cleaned_data['enrollment']))
+            print result
+            os.remove(filename)
             return HttpResponseRedirect('/admin/import/success/')
     else:
-        form = ImportForm()
-    context = {'form': form, 'title': 'Import'}
-    return render(request, 'term_market/admin/import.html', context)
+        form = ImportTermsForm()
+    context = {'form': form, 'title': 'Import terms'}
+    return render(request, 'term_market/admin/import_terms.html', context)
 
 
 class ImportSuccessful(TemplateView):
@@ -42,5 +45,5 @@ class ImportSuccessful(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ImportSuccessful, self).get_context_data(**kwargs)
-        context.update({u'title': u'Import'})
+        context.update({'title': 'Import terms'})
         return context
