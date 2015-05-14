@@ -30,7 +30,7 @@ def import_terms(request):
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/admin/import/success')
+            return HttpResponseRedirect('/admin/import/success/')
     else:
         form = ImportForm()
     context = {'form': form, 'title': 'Import'}

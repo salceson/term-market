@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'term_market',
+    'djcelery',
+    'kombu.transport.django',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -111,7 +113,11 @@ AUTH_USER_MODEL = 'term_market.User'
 
 LOGIN_REDIRECT_URL = 'index'
 
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+BROKER_URL = 'django://'
+
 import os
+
 os.environ['DEBUG'] = '1'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -142,4 +148,3 @@ GRAPPELLI_ADMIN_TITLE = 'TermMarket'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-from local_settings import *
