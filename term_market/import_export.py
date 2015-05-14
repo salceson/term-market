@@ -6,8 +6,7 @@ import time
 from os.path import dirname
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template.context_processors import csrf
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.conf import settings
 
@@ -27,8 +26,6 @@ def handle_uploaded_file(f):
 
 
 def import_terms(request):
-    params = {}
-    params.update(csrf(request))
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
@@ -36,8 +33,8 @@ def import_terms(request):
             return HttpResponseRedirect('/admin/import/success')
     else:
         form = ImportForm()
-    params.update({'form': form, 'title': 'Import'})
-    return render_to_response('term_market/admin/import.html', params)
+    context = {'form': form, 'title': 'Import'}
+    return render(request, 'term_market/admin/import.html', context)
 
 
 class ImportSuccessful(TemplateView):
