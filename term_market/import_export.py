@@ -4,18 +4,20 @@ import hashlib
 import time
 from os.path import dirname
 
+from django.conf import settings
+from django.db import OperationalError
 from django.http import JsonResponse
 from django.shortcuts import render
 
 from .forms import ImportTermsForm
 from .tasks import import_terms_task
+from .models import Enrollment
 
 
 def handle_uploaded_file(f, suffix):
     time_hash = hashlib.sha1()
     time_hash.update(str(time.time()))
-    # directory = settings.TEMP_DIR
-    directory = '/tmp/'
+    directory = settings.TEMP_DIR
     filename = dirname(directory) + '/' + time_hash.hexdigest() + suffix
     with open(filename, 'wb+') as dest:
         for chunk in f.chunks():
@@ -23,13 +25,18 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-def import_terms(request):
+def import_terms(request, enrollment=None):
     context = {'title': 'Import terms'}
+    try:
+        enrollment = Enrollment.objects.get(id=enrollment)
+    except Enrollment.DoesNotExist:
+        return render(request, "term_market/admin/import_no_enrollment.html", context)
+    context.update({'enrollment_name': enrollment.name})
     if request.method == 'POST':
         form = ImportTermsForm(request.POST, request.FILES)
         if form.is_valid():
             filename = handle_uploaded_file(request.FILES['file'], '_terms.txt')
-            result = import_terms_task.apply_async(args=(filename, form.cleaned_data['enrollment']))
+            result = import_terms_task.apply_async(args=(filename, enrollment))
             task_id = result.task_id
             context.update({'task': str(task_id)})
             return render(request, 'term_market/admin/import_success.html', context)
@@ -44,8 +51,11 @@ def import_check(_, task=None):
         return JsonResponse(
             {'status': 'error', 'msg': 'Wrong task id'}
         )
-    task_result = import_terms_task.AsyncResult(task)
-    finished = task_result.ready()
+    try:
+        task_result = import_terms_task.AsyncResult(task)
+        finished = task_result.ready()
+    except OperationalError:
+        finished = False
     success = False if not finished else task_result.get()
     return JsonResponse(
         {'status': 'ok', 'finished': finished, 'success': success}

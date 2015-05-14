@@ -34,6 +34,9 @@
                                         '<i class="fa fa-check-circle"></i> Import successful!'
                                 ).attr("class", "alert alert-success");
                             }
+                            $("#actions").html(
+                                    '<a href="/admin/term_market/enrollment/" class="grp-button grp-default">Powrót</a>'
+                            );
                         }
                     });
                 }
@@ -48,6 +51,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/`>
 {% endblock %}
 {% block content %}
+    <h2>Enrollment: {{ enrollment_name }}</h2>
     <p class="alert alert-info">
         <i class="fa fa-info-circle"></i>
         Upload successful.
@@ -55,6 +59,10 @@
     <p id="processing" class="alert alert-info">
         <i class="fa fa-info-circle"></i>
         Your file is being processed now. Please wait...
+        <i class="fa fa-spinner fa-spin"></i>
+    </p>
+    <p id="actions">
+        Please wait for import's completion...
         <i class="fa fa-spinner fa-spin"></i>
     </p>
 {% endblock %}

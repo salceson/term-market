@@ -23,7 +23,9 @@ from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, Of
 urlpatterns = [
     url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
-    url(r'^admin/import/terms/$', 'term_market.import_export.import_terms', name='import_terms'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/$',
+        'term_market.import_export.import_terms',
+        name='import_terms'),
     url(r'^admin/import/check/(?P<task>[a-zA-Z0-9\-]+)/$', 'term_market.import_export.import_check',
         name='import_check'),
     url(r'^admin/', include(admin.site.urls)),

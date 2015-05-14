@@ -16,15 +16,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 {% endblock %}
 {% block content %}
-    <h2>Enrollment: {{ enrollment_name }}</h2>
     <p class="alert alert-danger">
         <i class="fa fa-exclamation-triangle"></i>
-        <strong>Important!</strong>
-        Importing terms <strong>will remove all offers, term assignments and terms</strong> from enrollment!
+        No enrollment found with specified id!
     </p>
-    <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
-        {{ form|crispy }}
+    <p>
         <a href="/admin/term_market/enrollment/" class="grp-button grp-delete-link">Powrót</a>
-        <input type="submit" value="Import" class="grp-button grp-default"/>
-    </form>
+    </p>
 {% endblock %}
