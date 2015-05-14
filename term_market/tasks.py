@@ -11,8 +11,10 @@ from datetime import date, timedelta, datetime
 import os
 import csv
 from .models import Offer, Term, Teacher, Subject
+from django.conf import settings
 
 WEEKDAYS = dict(Pn=0, Wt=1, Sr=2, Cz=3, Pt=4, Sb=5, Nd=6)
+DEBUG = settings.DEBUG
 
 
 class DateConverter(object):
@@ -36,14 +38,16 @@ class DateConverter(object):
 
 @task()
 def import_terms_task(filename, enrollment):
-    print filename, enrollment
+    if DEBUG:
+        print filename, enrollment
     date_converter = DateConverter()
     try:
         Offer.objects.filter(enrollment=enrollment).delete()
         Term.objects.filter(enrollment=enrollment).delete()
-        reader = csv.DictReader(open('terms.txt'), delimiter='\t')
+        reader = csv.DictReader(open(filename), delimiter='\t')
         for x in reader:
-            print x['subject'], x['location'], x['date'], x['id'], x['group'], x['teacher']
+            if DEBUG:
+                print x['subject'], x['location'], x['date'], x['id'], x['group'], x['teacher']
             start, end, year = date_converter.convert_date(x['date'])
             teacher_last_name, teacher_first_name = x['teacher'].rsplit(' ', 1)
             try:
