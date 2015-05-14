@@ -48,6 +48,7 @@ WEEK_CHOICES = (
 class Term(models.Model):
     subject = models.ForeignKey('Subject')
     teacher = models.ForeignKey('Teacher')
+    enrollment = models.ForeignKey('Enrollment')
     week = models.CharField(max_length=1, choices=WEEK_CHOICES, blank=True)
     room = models.CharField(max_length=16)
     start_time = models.DateTimeField()
@@ -63,6 +64,7 @@ class Term(models.Model):
 
 class Offer(models.Model):
     offered_term = models.ForeignKey('Term')
+    enrollment = models.ForeignKey('Enrollment')
     wanted_terms = models.ManyToManyField('Term', related_name='offers')
     donor = models.ForeignKey('User', related_name='donated')
     bait = models.CharField(max_length=255, blank=True)
