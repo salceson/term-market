@@ -24,7 +24,7 @@
     </p>
     <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
         {{ form|crispy }}
-        <a href="/admin/term_market/enrollment/" class="grp-button grp-delete-link">Powrót</a>
+        <a href="/admin/term_market/enrollment/" class="grp-button grp-delete-link">Return</a>
         <input type="submit" value="Import" class="grp-button grp-default"/>
     </form>
 {% endblock %}
