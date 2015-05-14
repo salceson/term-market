@@ -152,3 +152,4 @@ GRAPPELLI_ADMIN_TITLE = 'TermMarket'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+from local_settings import *
