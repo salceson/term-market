@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
 import sys
@@ -12,14 +12,14 @@ import os
 import csv
 from .models import Offer, Term, Teacher, Subject
 from django.conf import settings
+from django.db import transaction
 
 WEEKDAYS = dict(Pn=0, Wt=1, Sr=2, Cz=3, Pt=4, Sb=5, Nd=6)
-DEBUG = settings.DEBUG
 
 
 class DateConverter(object):
-    TODAY = date.today()
-    WEEK_START = TODAY - timedelta(days=TODAY.weekday())
+    today = date.today()
+    week_start = today - timedelta(days=today.weekday())
 
     def convert_date(self, datestr):
         year = ''
@@ -28,7 +28,7 @@ class DateConverter(object):
             datestr = datestr[:-2]
         weekday, hours = datestr.split(' ', 1)
         start_hour, end_hour = hours.split('-')
-        day = self.WEEK_START + timedelta(days=WEEKDAYS[weekday])
+        day = self.week_start + timedelta(days=WEEKDAYS[weekday])
         start_hour = datetime.strptime(start_hour, '%H:%M').time()
         end_hour = datetime.strptime(end_hour, '%H:%M').time()
         start = datetime.combine(day, start_hour)
@@ -37,8 +37,9 @@ class DateConverter(object):
 
 
 @task()
+@transaction.atomic
 def import_terms_task(filename, enrollment):
-    if DEBUG:
+    if settings.DEBUG:
         print filename, enrollment
     date_converter = DateConverter()
     try:
@@ -46,7 +47,7 @@ def import_terms_task(filename, enrollment):
         Term.objects.filter(enrollment=enrollment).delete()
         reader = csv.DictReader(open(filename), delimiter='\t')
         for x in reader:
-            if DEBUG:
+            if settings.DEBUG:
                 print x['subject'], x['location'], x['date'], x['id'], x['group'], x['teacher']
             start, end, year = date_converter.convert_date(x['date'])
             teacher_last_name, teacher_first_name = x['teacher'].rsplit(' ', 1)

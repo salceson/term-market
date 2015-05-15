@@ -1,4 +1,5 @@
 from django.contrib.admin.templatetags.admin_list import items_for_result, result_headers
+from django.core.urlresolvers import reverse
 from django.template import Library
 from django.utils.safestring import mark_safe
 
@@ -9,7 +10,7 @@ def results(cl, additional_links):
     for res in cl.result_list:
         rl = list(items_for_result(cl, res, None))
         for link in additional_links:
-            rl.append(mark_safe(link['url_template'] % res.id))
+            rl.append(mark_safe(link['url_template'].replace(u'0', str(res.id))))
         yield rl
 
 
@@ -25,13 +26,12 @@ def extended_result_list(cl, additional_links):
     }
 
 
-# This function is an example template tag for use in an overridden change_list.html template.
 def enrollment_result_list(cl):
     additional_links = (
         {'text': 'Actions',
          'sortable': False,
-         'url_template': '<td><a href="/admin/term_market/enrollment/%d/import/terms/"'
-                         ' class="grp-button grp-btn-default">Import terms</a></td>'
+         'url_template': '<td><a href="' + reverse('import_terms', kwargs={'enrollment': '0'})
+                         + '" class="grp-button grp-btn-default">Import terms</a></td>'
          },
     )
 

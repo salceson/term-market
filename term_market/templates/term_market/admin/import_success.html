@@ -14,11 +14,9 @@
     <script>
         (function ($) {
             $(document).ready(function () {
-                var task_id = '{{ task }}';
-
                 function checkTask() {
                     $.ajax({
-                        url: '/admin/import/check/' + task_id + '/',
+                        url: "{% url 'import_check' task %}",
                         method: 'get'
                     }).done(function (data) {
                         console.log(data);
@@ -35,7 +33,7 @@
                                 ).attr("class", "alert alert-success");
                             }
                             $("#actions").html(
-                                    '<a href="/admin/term_market/enrollment/" class="grp-button grp-default">Return</a>'
+                                    '<a href="{% url 'admin:term_market_enrollment_changelist' %}" class="grp-button grp-default">Return</a>'
                             );
                         }
                     });
