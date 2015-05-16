@@ -48,7 +48,6 @@ WEEK_CHOICES = (
 class Term(models.Model):
     subject = models.ForeignKey('Subject')
     teacher = models.ForeignKey('Teacher')
-    enrollment = models.ForeignKey('Enrollment')
     week = models.CharField(max_length=1, choices=WEEK_CHOICES, blank=True)
     room = models.CharField(max_length=16)
     start_time = models.DateTimeField()
@@ -61,10 +60,13 @@ class Term(models.Model):
         return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
             ' - ' + unicode(self.teacher)
 
+    @property
+    def enrollment(self):
+        return self.subject.enrollment
+
 
 class Offer(models.Model):
     offered_term = models.ForeignKey('Term')
-    enrollment = models.ForeignKey('Enrollment')
     wanted_terms = models.ManyToManyField('Term', related_name='offers')
     donor = models.ForeignKey('User', related_name='donated')
     bait = models.CharField(max_length=255, blank=True)
@@ -72,3 +74,7 @@ class Offer(models.Model):
 
     def return_absolute_url(self):
         return reverse('offers')
+
+    @property
+    def enrollment(self):
+        return self.offered_term.subject.enrollment

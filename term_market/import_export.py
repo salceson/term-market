@@ -15,7 +15,7 @@ from .models import Enrollment
 
 def handle_uploaded_file(f, suffix):
     directory = settings.TEMP_DIR
-    filename = dirname(directory) + '/' + random_uuid() + suffix
+    filename = dirname(directory) + '/' + str(random_uuid()) + suffix
     with open(filename, 'wb+') as dest:
         for chunk in f.chunks():
             dest.write(chunk)
@@ -51,7 +51,13 @@ def import_check(request, task=None):
         finished = task_result.ready()
     except OperationalError:
         finished = False
-    success = False if not finished else task_result.get()
+    if finished and task_result.status == 'SUCCESS':
+        success, message = task_result.get()
+    else:
+        success = False
+        message = 'Unexpected error occured during import. It may be possible that your file is not in correct format!'
+    message = message.replace('<', '&lt;')
+    message = message.replace('>', '&gt;')
     return JsonResponse(
-        {'status': 'ok', 'finished': finished, 'success': success}
+        {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
     )

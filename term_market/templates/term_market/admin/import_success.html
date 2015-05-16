@@ -25,7 +25,7 @@
                         } else {
                             if (!data['success']) {
                                 $("#processing").html(
-                                        '<i class="fa fa-exclamation-triangle"></i> Import failed!'
+                                        '<i class="fa fa-exclamation-triangle"></i> Import failed! <pre>' + data['message'] + '</pre>'
                                 ).attr("class", "alert alert-danger");
                             } else {
                                 $("#processing").html(
@@ -46,7 +46,7 @@
 {% endblock %}
 {% block extrastyle %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/`>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 {% endblock %}
 {% block content %}
     <h2>Enrollment: {{ enrollment_name }}</h2>
