@@ -30,8 +30,10 @@ class Solver(object):
         for offer in self.offers:
             graph.add_node(offer)
         for offer in self.offers:
-            for wanted_offer in offer.wanted_terms_id_list:
-                graph.add_edge(self.offers[offer.id], self.offers[wanted_offer.id])
+            for wanted_term in offer.wanted_terms_id_list:
+                wanted_offers = filter(lambda off: off.offered_term_id == wanted_term, list(self.offers))
+                for wanted_offer in wanted_offers:
+                    graph.add_edge(self.offers[offer.id], self.offers[wanted_offer.id])
         return graph
 
     def solve(self):
