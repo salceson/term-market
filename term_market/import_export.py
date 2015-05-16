@@ -53,9 +53,12 @@ def import_check(request, task=None):
         finished = False
     if finished and task_result.status == 'SUCCESS':
         success, message = task_result.get()
-    else:
+    elif finished:
         success = False
         message = 'Unexpected error occured during import. It may be possible that your file is not in correct format!'
+    else:
+        success = False
+        message = ''
     message = message.replace('<', '&lt;')
     message = message.replace('>', '&gt;')
     return JsonResponse(
