@@ -55,7 +55,7 @@ def import_check(request, task=None):
         success, message = task_result.get()
     elif finished:
         success = False
-        message = 'Unexpected error occured during import. It may be possible that your file is not in correct format!'
+        message = 'Unexpected error occurred during import. It may be possible that your file is not in correct format!'
     else:
         success = False
         message = ''
