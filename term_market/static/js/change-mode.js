@@ -19,8 +19,3 @@ function changeCSS() {
 }
 
 var nightMode = ($.cookie('skin') != 'day');
-if (nightMode) {
-    link.href = nightCSS;
-} else {
-    link.href = dayCSS;
-}
