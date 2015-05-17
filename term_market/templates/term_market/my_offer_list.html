@@ -23,11 +23,13 @@
                     <td>{{ e.subject }}</td>
                     <td>{{ e.teacher }}</td>
                     <td>{{ e.start_time|date:"D G:i" }} {{ e.week }}</td>
-                    <td>{{ offer.bait }}</td>
-                    <td>
-                            <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
-                            <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
+                {% if forloop.first %}
+                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.bait }}</td>
+                    <td rowspan="{{ offer.wanted_terms.all|length }}">
+                        <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
+                        <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
                     </td>
+                {% endif %}
                 </tr>
             {% endfor %}
         {% endfor %}

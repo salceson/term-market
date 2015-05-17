@@ -23,8 +23,10 @@
                     <td>{{ e.subject }}</td>
                     <td>{{ e.teacher }}</td>
                     <td>{{ e.start_time|date:"D G:i" }} {{ e.week }}</td>
-                    <td>{{ offer.bait}}</td>
-                    <td><input type="button" class="btn btn-success" value="Accept offer"></td>
+                {% if forloop.first %}
+                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.bait }}</td>
+                    <td rowspan="{{ offer.wanted_terms.all|length }}"><input type="button" class="btn btn-success" value="Accept offer"></td>
+                {% endif %}
                 </tr>
             {% endfor %}
         {% endfor %}
