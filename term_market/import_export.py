@@ -10,8 +10,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
 
-from .forms import ImportTermsForm
-from .tasks import import_terms_task
+from .forms import ImportTermsForm, ImportDepartmentListForm
+from .tasks import import_terms_task, import_department_list_task
 from .models import Enrollment
 
 
@@ -24,36 +24,72 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-class ImportTerms(FormView):
-    form_class = ImportTermsForm
-    template_name = "term_market/admin/import_terms.html"
+class Import(FormView):
+    def __init__(self, success_link_name, task, suffix, title, **kwargs):
+        super(Import, self).__init__(**kwargs)
+        self.success_link_name = success_link_name
+        self.task = task
+        self.suffix = suffix
+        self.title = title
 
     def get_context_data(self, **kwargs):
-        context = super(ImportTerms, self).get_context_data(**kwargs)
+        context = super(Import, self).get_context_data(**kwargs)
         enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
-        context.update({'title': 'Import terms', 'enrollment_name': enrollment.name})
+        context.update({'title': self.title, 'enrollment_name': enrollment.name})
         return context
 
     def form_valid(self, form):
-        filename = handle_uploaded_file(self.request.FILES['file'], "_terms.txt")
+        filename = handle_uploaded_file(self.request.FILES['file'], self.suffix)
         enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
-        result = import_terms_task.apply_async(args=(filename, enrollment))
+        result = self.task.apply_async(args=(filename, enrollment))
         self.task_id = str(result.task_id)
-        return super(ImportTerms, self).form_valid(form)
+        return super(Import, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('import_terms_success', kwargs={'enrollment': self.kwargs['enrollment'], 'task': self.task_id})
+        return reverse(self.success_link_name, kwargs={'enrollment': self.kwargs['enrollment'], 'task': self.task_id})
 
 
-class ImportTermsSuccess(TemplateView):
-    template_name = 'term_market/admin/import_terms_success.html'
+class ImportTerms(Import):
+    form_class = ImportTermsForm
+    template_name = "term_market/admin/import_terms.html"
+
+    def __init__(self, **kwargs):
+        super(ImportTerms, self).__init__('import_terms_success', import_terms_task, '_terms.txt', 'Import terms',
+                                          **kwargs)
+
+
+class ImportDepartmentList(Import):
+    form_class = ImportDepartmentListForm
+    template_name = "term_market/admin/import_department_list.html"
+
+    def __init__(self, **kwargs):
+        super(ImportDepartmentList, self).__init__('import_department_list_success', import_department_list_task,
+                                                   '_department_list.txt', 'Import department list', **kwargs)
+
+
+class ImportSuccess(TemplateView):
+    template_name = 'term_market/admin/import_success.html'
+
+    def __init__(self, title, **kwargs):
+        super(ImportSuccess, self).__init__(**kwargs)
+        self.title = title
 
     def get_context_data(self, **kwargs):
-        context = super(ImportTermsSuccess, self).get_context_data(**kwargs)
+        context = super(ImportSuccess, self).get_context_data(**kwargs)
         enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
         task_id = self.kwargs['task']
-        context.update({'title': 'Import terms', 'enrollment_name': enrollment.name, 'task': task_id})
+        context.update({'title': self.title, 'enrollment_name': enrollment.name, 'task': task_id})
         return context
+
+
+class ImportTermsSuccess(ImportSuccess):
+    def __init__(self, **kwargs):
+        super(ImportTermsSuccess, self).__init__('Import terms', **kwargs)
+
+
+class ImportDepartmentListSuccess(ImportSuccess):
+    def __init__(self, **kwargs):
+        super(ImportDepartmentListSuccess, self).__init__('Import department list', **kwargs)
 
 
 def import_check(request, task=None):

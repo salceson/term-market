@@ -11,7 +11,7 @@ from datetime import date, timedelta, datetime
 import os
 import re
 import csv
-from .models import Offer, Term, Teacher, Subject
+from .models import Offer, Term, Teacher, Subject, User
 from django.conf import settings
 from django.db import transaction, IntegrityError
 
@@ -21,11 +21,12 @@ DATE_PATTERN = re.compile(r'^(Pn|Wt|Sr|Cz|Pt|Sb|Nd) (0?[0-9]|1[0-9]|2[0-3]):'
 DATE_MESSAGE = 'date must match format: <Pn|Wt|Sr|Cz|Pt|Sb|Nd> H[H]:MM-H[H]:MM[ <A|B>]'
 STRING_FORMAT = '%s must be string with length at most 255'
 INT_FORMAT = '%s must be integer'
-INT_OR_EMPTY_FORMAT = INT_FORMAT + ' or empty string'
+INT_OR_EMPTY_FORMAT = INT_FORMAT + ' or empty'
 IMPORT_ERROR_FORMAT = 'Import error: line %d: %s.'
+STANDARD_ERROR = 'wrong file format'
 
 
-class TermsImportError(Exception):
+class AbstractImportError(Exception):
     def __init__(self, line, msg):
         self.message = IMPORT_ERROR_FORMAT % (line, msg)
 
@@ -34,6 +35,14 @@ class TermsImportError(Exception):
 
     def __str__(self):
         return self.__unicode__()
+
+
+class TermsImportError(AbstractImportError):
+    pass
+
+
+class DepartmentListImportError(AbstractImportError):
+    pass
 
 
 class DateConverter(object):
@@ -82,8 +91,8 @@ def import_terms_task(filename, enrollment):
                     start, end, year = date_converter.convert_date(x['date'], line)
                     teacher_last_name, teacher_first_name = x['teacher'].rsplit(' ', 1)
                     check_string_fields_length(line, (x['subject'], 'subject'), (x['location'], 'location'),
-                                        (teacher_first_name, 'teacher first name'),
-                                        (teacher_last_name, 'teacher last name'))
+                                               (teacher_first_name, 'teacher first name'),
+                                               (teacher_last_name, 'teacher last name'))
                     try:
                         term = Term.objects.get(external_id=int(x['id']))
                     except Term.DoesNotExist:
@@ -111,6 +120,55 @@ def import_terms_task(filename, enrollment):
                 exc = IntegrityError()
                 exc.message = e.message
                 raise exc
+    except IntegrityError as e:
+        return False, e.message
+    finally:
+        os.remove(filename)
+    return True, 'OK'
+
+
+@task()
+def import_department_list_task(filename, enrollment):
+    try:
+        with open(filename, 'r') as f:
+            with transaction.atomic():
+                try:
+                    user = None
+                    line_no = 1
+                    for line in f:
+                        line = line.rstrip()
+                        if not line.startswith('\t\t'):
+                            try:
+                                name, enroll_id = line.split(';', 1)
+                                last_name, first_name = name.split(' ', 1)
+                            except ValueError:
+                                raise DepartmentListImportError(line_no, STANDARD_ERROR)
+                            try:
+                                user = User.objects.get(transcript_no=enroll_id)
+                            except User.DoesNotExist:
+                                user = User()
+                                user.username = '!ENROLL!' + enroll_id
+                                user.first_name = first_name
+                                user.last_name = last_name
+                                user.transcript_no = enroll_id
+                                user.save()
+                            line_no += 1
+                            continue
+                        line = line.lstrip()
+                        try:
+                            subject, department_group = line.split(' - Grupa - ')
+                        except ValueError:
+                            raise DepartmentListImportError(line_no, STANDARD_ERROR)
+                        subject = Subject.objects.get(name=subject, enrollment=enrollment)
+                        term = Term.objects.get(subject=subject, department_group=int(department_group))
+                        term.students.add(user)
+                        print user, term
+                        line_no += 1
+                except DepartmentListImportError as e:
+                    print e.message
+                    exc = IntegrityError()
+                    exc.message = e.message
+                    raise exc
     except IntegrityError as e:
         return False, e.message
     finally:
