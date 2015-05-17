@@ -19,6 +19,7 @@ from django.contrib import admin
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView
 
 urlpatterns = [
+    url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),

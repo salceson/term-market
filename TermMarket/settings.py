@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'djangojs',
     'django_extensions',
     'grappelli',
     'django.contrib.admin',

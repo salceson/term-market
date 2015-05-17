@@ -7,8 +7,8 @@ var nightMode = false;
 function changeCSS() {
 		nightMode = !nightMode;
 		var cssLinkIndex = 1;
-		var nightCSS = "/static/css/cover.css";
-		var dayCSS = "/static/css/cover-light.css";
+		var nightCSS = Django.static('css/cover.css');
+		var dayCSS = Django.static('css/cover-light.css');
 
         var oldLink = document.getElementsByTagName("link").item(cssLinkIndex);
 
