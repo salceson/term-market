@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <title>TermMarket</title>
     <link id="css-skin" href="{% static 'css/cover.css' %}" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -31,7 +32,7 @@
 {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
 {% endif %}
-                <li><a href="#"><span class="glyphicon glyphicon-certificate" onclick="changeCSS();"></span></a></li>
+                <li><a href="#"><span class="fa fa-adjust" onclick="changeCSS();"></span></a></li>
             </ul>
         </nav>
     </div>
