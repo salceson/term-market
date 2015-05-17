@@ -2,20 +2,21 @@
  * Created by Joanna on 2015-05-12.
  */
 
-var link = document.getElementById("css-skin");
-var nightCSS = Django.static('css/cover.css');
-var dayCSS = Django.static('css/cover-light.css');
+NIGHT_CSS = Django.static('css/cover.css');
+DAY_CSS = Django.static('css/cover-light.css');
 
-function changeCSS() {
+nightMode = ($.cookie('skin') != 'day');
+stylesheet = $('#skin-css');
+
+$('#skin-toggle').click(function () {
     nightMode = !nightMode;
 
     if (nightMode) {
         $.cookie('skin', 'night', { path: '/', expires: 3650 });
-        link.href = nightCSS;
+        stylesheet.attr('href', NIGHT_CSS);
     } else {
         $.cookie('skin', 'day', { path: '/', expires: 3650 });
-        link.href = dayCSS;
+        stylesheet.attr('href', DAY_CSS);
     }
-}
-
-var nightMode = ($.cookie('skin') != 'day');
+});
+$('#skin-toggle').show();
