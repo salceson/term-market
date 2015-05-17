@@ -20,6 +20,7 @@ from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, Of
     MyOfferDeleteView, MyOfferUpdateView
 
 urlpatterns = [
+    url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
