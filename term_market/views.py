@@ -102,14 +102,14 @@ class ScheduleView(ListView, LoginRequiredMixin):
         return self.request.user.terms.all()
 
 
-class OfferListView(ListView, LoginRequiredMixin):
+class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
 
     def get_queryset(self):
         return super(OfferListView, self).get_queryset().exclude(donor=self.request.user)
 
 
-class MyOfferView(ListView, LoginRequiredMixin):
+class MyOfferView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
 
@@ -117,7 +117,7 @@ class MyOfferView(ListView, LoginRequiredMixin):
         return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
 
 
-class MyOfferDeleteView(DeleteView, LoginRequiredMixin):
+class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
     model = Offer
     success_url = '/my_offers'
 
@@ -125,7 +125,7 @@ class MyOfferDeleteView(DeleteView, LoginRequiredMixin):
         return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
 
 
-class MyOfferUpdateView(UpdateView, LoginRequiredMixin):
+class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
     model = Offer
     fields = ['offered_term', 'wanted_terms', 'bait']
     template_name_suffix = '_update_form'

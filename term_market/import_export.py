@@ -25,7 +25,7 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-class Import(FormView, LoginRequiredMixin, PermissionRequiredMixin):
+class Import(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
 
@@ -71,7 +71,7 @@ class ImportDepartmentList(Import):
                                                    '_department_list.txt', 'Import department list', **kwargs)
 
 
-class ImportSuccess(TemplateView, LoginRequiredMixin, PermissionRequiredMixin):
+class ImportSuccess(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
     template_name = 'term_market/admin/import_success.html'
