@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <title>TermMarket</title>
-    <link href="{% static 'css/cover.css' %}" rel="stylesheet">
+    <link id="css-skin" href="{% static 'css/cover.css' %}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,7 +31,7 @@
 {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
 {% endif %}
-                <li><span class="glyphicon glyphicon-certificate" onclick="changeCSS();"></span></li>
+                <li><a href="#"><span class="glyphicon glyphicon-certificate" onclick="changeCSS();"></span></a></li>
             </ul>
         </nav>
     </div>
