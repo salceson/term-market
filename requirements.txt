@@ -1,6 +1,7 @@
 Django==1.8.1
 django-extensions==1.5.3
 django-grappelli==2.6.4
+django.js==0.8.1
 oauthlib==0.7.2
 requests==2.7.0
 requests-oauthlib==0.5.0
