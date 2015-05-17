@@ -97,7 +97,7 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
-class ScheduleView(ListView, LoginRequiredMixin):
+class ScheduleView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return self.request.user.terms.all()
 
