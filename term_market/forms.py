@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from crispy_forms.bootstrap import UneditableField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 
 from django import forms
 from django.forms import ModelForm
 from term_market.models import Offer
+from term_market.utils import FakeQuerySet
 
 
 class ImportTermsForm(forms.Form):
@@ -23,19 +25,28 @@ class OfferCreateUpdateForm(ModelForm):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
 
-        self.fields['offered_term'].queryset = user.terms
+        self.user = user
 
         if kwargs.get('instance'):
             button = Submit('update', 'Update offer')
+            self.offered_term = kwargs['instance'].offered_term
         else:
             button = Submit('create', 'Create offer')
+            self.offered_term = kwargs['initial']['offered_term']
+
+        self.fields['offered_term'].queryset = FakeQuerySet([self.offered_term])
 
         self.helper.layout = Layout(
-            'offered_term',
+            UneditableField('offered_term'),
             Field('wanted_terms', size='8'),
             'bait',
             button
         )
+
+    def save(self, *args, **kwargs):
+        self.instance.donor = self.user
+        self.instance.offered_term = self.offered_term
+        return super(OfferCreateUpdateForm, self).save(*args, **kwargs)
 
     class Meta:
         model = Offer
