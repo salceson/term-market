@@ -13,6 +13,7 @@ from django.views.generic import FormView, TemplateView
 from .forms import ImportTermsForm, ImportDepartmentListForm
 from .tasks import import_terms_task, import_department_list_task
 from .models import Enrollment
+from term_market.views import LoginRequiredMixin, PermissionRequiredMixin
 
 
 def handle_uploaded_file(f, suffix):
@@ -24,7 +25,10 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-class Import(FormView):
+class Import(FormView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = 'term_market.change_enrollment'
+    object = Enrollment
+
     def __init__(self, success_link_name, task, suffix, title, **kwargs):
         super(Import, self).__init__(**kwargs)
         self.success_link_name = success_link_name
@@ -67,7 +71,9 @@ class ImportDepartmentList(Import):
                                                    '_department_list.txt', 'Import department list', **kwargs)
 
 
-class ImportSuccess(TemplateView):
+class ImportSuccess(TemplateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = 'term_market.change_enrollment'
+    object = Enrollment
     template_name = 'term_market/admin/import_success.html'
 
     def __init__(self, title, **kwargs):
