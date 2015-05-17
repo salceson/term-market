@@ -5,8 +5,8 @@ from crispy_forms.layout import Layout, Submit, Field
 
 from django import forms
 from django.forms import ModelForm
-from term_market.models import Offer
-from term_market.utils import FakeQuerySet
+from term_market.models import Offer, Term
+from term_market.utils import instance_as_queryset
 
 
 class ImportTermsForm(forms.Form):
@@ -34,10 +34,13 @@ class OfferCreateUpdateForm(ModelForm):
             button = Submit('create', 'Create offer')
             self.offered_term = kwargs['initial']['offered_term']
 
-        self.fields['offered_term'].queryset = FakeQuerySet([self.offered_term])
+        self.fields['offered_term'].queryset = instance_as_queryset(self.offered_term)
+
+        subjects = self.user.terms.values_list('subject').distinct()
+        self.fields['wanted_terms'].queryset = Term.objects.filter(subject__in=subjects)
 
         self.helper.layout = Layout(
-            UneditableField('offered_term'),
+            Field('offered_term'),
             Field('wanted_terms', size='8'),
             'bait',
             button

@@ -1,7 +1,2 @@
-class FakeQuerySet(object):
-    def __init__(self, items):
-        self.items = items
-
-    def iterator(self):
-        for item in self.items:
-            yield item
+def instance_as_queryset(instance):
+    return type(instance).objects.filter(pk=instance.pk)
