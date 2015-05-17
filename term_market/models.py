@@ -60,6 +60,10 @@ class Term(models.Model):
         return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
             ' - ' + unicode(self.teacher)
 
+    @property
+    def enrollment(self):
+        return self.subject.enrollment
+
 
 class Offer(models.Model):
     offered_term = models.ForeignKey('Term')
@@ -70,3 +74,7 @@ class Offer(models.Model):
 
     def return_absolute_url(self):
         return reverse('offers')
+
+    @property
+    def enrollment(self):
+        return self.offered_term.subject.enrollment

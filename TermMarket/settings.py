@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'term_market',
+    'kombu.transport.django',
+    'djcelery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -111,7 +113,15 @@ AUTH_USER_MODEL = 'term_market.User'
 
 LOGIN_REDIRECT_URL = 'index'
 
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+BROKER_URL = 'django://'
+
+import djcelery
+
+djcelery.setup_loader()
+
 import os
+
 os.environ['DEBUG'] = '1'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
