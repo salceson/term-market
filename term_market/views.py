@@ -2,9 +2,10 @@ from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView
+from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View
 from requests_oauthlib import OAuth2Session
 from django.utils import timezone
 from json import dumps
@@ -74,7 +75,8 @@ class ScheduleView(TemplateView):
             t = {
                 'title': '%s - %s' % (term.subject, term.teacher),
                 'start': term.start_time.isoformat(),
-                'end': term.end_time.isoformat()
+                'end': term.end_time.isoformat(),
+                'url': reverse('offer_create', kwargs={'term_pk': term.pk}),
             }
             object_list.append(t)
         context_data['object_list'] = mark_safe(dumps(object_list))
@@ -95,6 +97,11 @@ class MyOfferView(ListView):
 
     def get_queryset(self):
         return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
+
+
+class MyOfferCreateView(View):
+    # FIXME: Filler. Not my task, but needed view instance.
+    pass
 
 
 class MyOfferDeleteView(DeleteView):
