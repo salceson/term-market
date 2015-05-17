@@ -1,8 +1,10 @@
 from django.contrib import auth
 
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
-from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect, get_object_or_404
+from django.utils.safestring import mark_safe
+from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
 from requests_oauthlib import OAuth2Session
 from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -10,8 +12,11 @@ from django.utils.http import urlquote
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from json import dumps
 
-from .models import Offer
+from .models import Offer, Term
+from term_market.forms import OfferCreateUpdateForm
 
 
 class LoginRequiredMixin(object):
@@ -97,9 +102,26 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
-class ScheduleView(LoginRequiredMixin, ListView):
-    def get_queryset(self):
-        return self.request.user.terms.all()
+class ScheduleView(LoginRequiredMixin, TemplateView):
+    template_name = 'term_market/term_list.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super(ScheduleView, self).get_context_data(**kwargs)
+        object_list = []
+        calendar_start = timezone.now()
+        for term in self.request.user.terms.all():
+            if calendar_start > term.start_time:
+                calendar_start = term.start_time
+            t = {
+                'title': '%s - %s' % (term.subject, term.teacher),
+                'start': term.start_time.isoformat(),
+                'end': term.end_time.isoformat(),
+                'url': reverse('offer_create', kwargs={'term_pk': term.pk}),
+            }
+            object_list.append(t)
+        context_data['object_list'] = mark_safe(dumps(object_list))
+        context_data['calendar_start'] = calendar_start.isoformat()
+        return context_data
 
 
 class OfferListView(LoginRequiredMixin, ListView):
@@ -117,19 +139,35 @@ class MyOfferView(LoginRequiredMixin, ListView):
         return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
 
 
+class MyOfferCreateView(LoginRequiredMixin, CreateView):
+    model = Offer
+    form_class = OfferCreateUpdateForm
+    success_url = '/my_offers'
+
+    def get_form_kwargs(self):
+        kwargs = super(MyOfferCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['initial'] = {'offered_term': get_object_or_404(Term, pk=self.kwargs['term_pk'])}
+        return kwargs
+
+
+class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
+    model = Offer
+    form_class = OfferCreateUpdateForm
+    success_url = '/my_offers'
+
+    def get_queryset(self):
+        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super(MyOfferUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+
 class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
     model = Offer
     success_url = '/my_offers'
 
     def get_queryset(self):
         return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
-
-
-class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
-    model = Offer
-    fields = ['offered_term', 'wanted_terms', 'bait']
-    template_name_suffix = '_update_form'
-    success_url = '/my_offers'
-
-    def get_queryset(self):
-        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)
