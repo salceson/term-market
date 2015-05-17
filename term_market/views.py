@@ -3,14 +3,15 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View
+from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
 from requests_oauthlib import OAuth2Session
 from django.utils import timezone
 from json import dumps
 
-from .models import Offer
+from .models import Offer, Term
+from term_market.forms import OfferCreateUpdateForm
 
 
 class LoginRequiredMixin(object):
@@ -99,9 +100,30 @@ class MyOfferView(ListView):
         return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
 
 
-class MyOfferCreateView(View):
-    # FIXME: Filler. Not my task, but needed view instance.
-    pass
+class MyOfferCreateView(LoginRequiredMixin, CreateView):
+    model = Offer
+    form_class = OfferCreateUpdateForm
+    success_url = '/my_offers'
+
+    def get_form_kwargs(self):
+        kwargs = super(MyOfferCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['initial'] = {'offered_term': get_object_or_404(Term, pk=self.kwargs['term_pk'])}
+        return kwargs
+
+
+class MyOfferUpdateView(UpdateView):
+    model = Offer
+    form_class = OfferCreateUpdateForm
+    success_url = '/my_offers'
+
+    def get_queryset(self):
+        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super(MyOfferUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class MyOfferDeleteView(DeleteView):
@@ -110,13 +132,3 @@ class MyOfferDeleteView(DeleteView):
 
     def get_queryset(self):
         return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
-
-
-class MyOfferUpdateView(UpdateView):
-    model = Offer
-    fields = ['offered_term', 'wanted_terms', 'bait']
-    template_name_suffix = '_update_form'
-    success_url = '/my_offers'
-
-    def get_queryset(self):
-        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)

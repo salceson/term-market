@@ -1,8 +1,0 @@
-{% extends 'term_market/base.html' %}
-{% load crispy_forms_tags %}
-{% block content %}
-    <form action="" method="post">{% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Update" class="btn btn-primary"/>
-    </form>
-{% endblock %}

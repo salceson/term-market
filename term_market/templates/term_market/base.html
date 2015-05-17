@@ -30,8 +30,7 @@
         <nav>
             <ul class="nav masthead-nav">
                 <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'schedule' %}">My schedule</a></li>
-                <li><a href="#">Add offer</a></li>
+                <li><a href="{% url 'schedule' %}">Add offer</a></li>
                 <li><a href="{% url 'my_offers' %}">Edit my offers</a></li>
                 <li><a href="{% url 'offers' %}">Browse offers</a></li>
 {% if user.is_staff %}
