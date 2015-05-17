@@ -18,16 +18,18 @@
                         <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.donor }}</td>
                         <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.subject }}</td>
                         <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.teacher }}</td>
-                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.start_time }} {{ offer.offered_term.week }}</td>
+                        <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.start_time|date:"D G:i" }} {{ offer.offered_term.week }}</td>
                     {% endif %}
                     <td>{{ e.subject }}</td>
                     <td>{{ e.teacher }}</td>
-                    <td>{{ e.start_time }} {{ e.week }}</td>
-                    <td>{{ offer.bait }}</td>
-                    <td>
-                            <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
-                            <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
+                    <td>{{ e.start_time|date:"D G:i" }} {{ e.week }}</td>
+                {% if forloop.first %}
+                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.bait }}</td>
+                    <td rowspan="{{ offer.wanted_terms.all|length }}">
+                        <a href="{% url 'offer_delete' offer.id %}" class="btn btn-danger">Delete offer</a>
+                        <a href="{% url 'offer_update' offer.id %}" class="btn btn-warning">Update offer</a>
                     </td>
+                {% endif %}
                 </tr>
             {% endfor %}
         {% endfor %}

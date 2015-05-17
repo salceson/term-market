@@ -1,12 +1,17 @@
-from django.conf import settings
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required
+
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
 from requests_oauthlib import OAuth2Session
+from django.conf import settings
+from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.utils.http import urlquote
+from django.core.exceptions import ImproperlyConfigured
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from json import dumps
 
@@ -19,6 +24,40 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+class PermissionRequiredMixin(object):
+    """
+    Code from: https://github.com/lukaszb/django-guardian/issues/48
+    """
+    login_url = settings.LOGIN_URL
+    raise_exception = False
+    permission_required = None
+    redirect_field_name = REDIRECT_FIELD_NAME
+
+    def dispatch(self, request, *args, **kwargs):
+        original_return_value = super(PermissionRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+        if self.permission_required is None or len(self.permission_required.split('.')) != 2:
+            raise ImproperlyConfigured("'PermissionRequiredMixin' requires 'permission_required' attribute to be"
+                                       " set to '<app_label>.<permission codename>' but is set to '%s' instead"
+                                       % self.permission_required)
+
+        if hasattr(self, 'object') and self.object is not None:
+            has_permission = request.user.has_perm(self.permission_required, self.object)
+        elif hasattr(self, 'get_object') and callable(self.get_object):
+            has_permission = request.user.has_perm(self.permission_required, self.get_object())
+        else:
+            has_permission = request.user.has_perm(self.permission_required)
+
+        if not has_permission:
+            if self.raise_exception:
+                return HttpResponseForbidden()
+            else:
+                path = urlquote(request.get_full_path())
+                tup = self.login_url, self.redirect_field_name, path
+                return HttpResponseRedirect("%s?%s=%s" % tup)
+        return original_return_value
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -63,7 +102,7 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
-class ScheduleView(TemplateView):
+class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = 'term_market/term_list.html'
 
     def get_context_data(self, **kwargs):
@@ -85,14 +124,14 @@ class ScheduleView(TemplateView):
         return context_data
 
 
-class OfferListView(ListView):
+class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
 
     def get_queryset(self):
         return super(OfferListView, self).get_queryset().exclude(donor=self.request.user)
 
 
-class MyOfferView(ListView):
+class MyOfferView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
 
@@ -112,7 +151,7 @@ class MyOfferCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class MyOfferUpdateView(UpdateView):
+class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
     model = Offer
     form_class = OfferCreateUpdateForm
     success_url = '/my_offers'
@@ -126,7 +165,7 @@ class MyOfferUpdateView(UpdateView):
         return kwargs
 
 
-class MyOfferDeleteView(DeleteView):
+class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
     model = Offer
     success_url = '/my_offers'
 
