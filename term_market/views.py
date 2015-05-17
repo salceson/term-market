@@ -3,8 +3,11 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
+from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView
 from requests_oauthlib import OAuth2Session
+from django.utils import timezone
+from json import dumps
 
 from .models import Offer
 
@@ -58,9 +61,25 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
-class ScheduleView(ListView):
-    def get_queryset(self):
-        return self.request.user.terms.all()
+class ScheduleView(TemplateView):
+    template_name = 'term_market/term_list.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super(ScheduleView, self).get_context_data(**kwargs)
+        object_list = []
+        calendar_start = timezone.now()
+        for term in self.request.user.terms.all():
+            if calendar_start > term.start_time:
+                calendar_start = term.start_time
+            t = {
+                'title': '%s - %s' % (term.subject, term.teacher),
+                'start': term.start_time.isoformat(),
+                'end': term.end_time.isoformat()
+            }
+            object_list.append(t)
+        context_data['object_list'] = mark_safe(dumps(object_list))
+        context_data['calendar_start'] = calendar_start.isoformat()
+        return context_data
 
 
 class OfferListView(ListView):

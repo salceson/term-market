@@ -2,34 +2,35 @@
 {% block css %}
 {{ block.super }}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.print.css">
 {% endblock %}
 {% block js_footer %}
 {{ block.super }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#calendar').fullCalendar({
+        header: false,
+        defaultView: 'agendaWeek',
+        allDaySlot: false,
+        minTime: '08:00:00',
+        maxTime: '21:00:00',
+        axisFormat: 'HH:mm',
+        slotEventOverlap: false,
+        views: {
+            week: {
+                columnFormat: 'ddd'
+            }
+        },
+        weekends: false,
+        defaultDate: "{{ calendar_start }}",
+        events: {{ object_list }}
+    })
+})
+</script>
 {% endblock %}
 {% block content %}
 <div class="inner cover">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Date</th>
-            <th>Location</th>
-        </tr>
-        </thead>
-        <tbody>
-{% for term in object_list %}
-        <tr>
-            <td>{{ term.subject }}</td>
-            <td>{{ term.teacher }}</td>
-            <td>{{ term.start_time }} {{ term.week }}</td>
-            <td>{{ term.room }}</td>
-        </tr>
-{% endfor %}
-        </tbody>
-    </table>
+    <div id="calendar"></div>
 </div>
 {% endblock %}
