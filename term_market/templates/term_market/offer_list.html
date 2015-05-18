@@ -12,19 +12,20 @@
         </tr>
         </thead>
         <tbody>
-        {% for offer in object_list %}
-            {% for e in offer.wanted_terms.all %}
+        {% regroup object_list by offer as offers %}
+        {% for offer in offers %}
+            {% for e in offer.list %}
                 <tr>
                 {% if forloop.first %}
-                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.donor }}</td>
-                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.subject }}</td>
-                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.teacher }}</td>
-                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.offered_term.start_time|date:"D G:i" }} {{ offer.offered_term.week }}</td>
-                    <td rowspan="{{ offer.wanted_terms.all|length }}">{{ offer.bait }}</td>
+                    <td rowspan="{{ offer.list|length }}">{{ offer.grouper.donor }}</td>
+                    <td rowspan="{{ offer.list|length }}">{{ offer.grouper.offered_term.subject }}</td>
+                    <td rowspan="{{ offer.list|length }}">{{ offer.grouper.offered_term.teacher }}</td>
+                    <td rowspan="{{ offer.list|length }}">{{ offer.grouper.offered_term.start_time|date:"D G:i" }} {{ offer.grouper.offered_term.week }}</td>
+                    <td rowspan="{{ offer.list|length }}">{{ offer.grouper.bait }}</td>
                 {% endif %}
-                    <td>{{ e.subject }}</td>
-                    <td>{{ e.teacher }}</td>
-                    <td>{{ e.start_time|date:"D G:i" }} {{ e.week }}</td>
+                    <td>{{ e.term.subject }}</td>
+                    <td>{{ e.term.teacher }}</td>
+                    <td>{{ e.term.start_time|date:"D G:i" }} {{ e.term.week }}</td>
                     <td><input type="button" class="btn btn-success" value="Accept offer"></td>
                 </tr>
             {% endfor %}

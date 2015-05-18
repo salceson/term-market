@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from json import dumps
 
-from .models import Offer, Term
+from .models import Offer, Term, OfferWantedTerm
 from term_market.forms import OfferCreateUpdateForm
 
 
@@ -85,10 +85,14 @@ class LogoutView(RedirectView):
 
 
 def oauth_callback(request):
+    try:
+        state = request.session['oauth_state']
+    except KeyError:
+        return redirect(settings.LOGIN_REDIRECT_URL)
     oauth = OAuth2Session(settings.OAUTH_CLIENT_ID,
                           redirect_uri=settings.OAUTH_REDIRECT_URI,
                           scope=settings.OAUTH_SCOPE,
-                          state=request.session['oauth_state'])
+                          state=state)
     del request.session['oauth_state']
     authorization_response = request.build_absolute_uri()
     oauth.fetch_token(settings.OAUTH_TOKEN_URI,
@@ -125,10 +129,11 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
 
 
 class OfferListView(LoginRequiredMixin, ListView):
-    model = Offer
+    model = OfferWantedTerm
+    template_name = 'term_market/offer_list.html'
 
     def get_queryset(self):
-        return super(OfferListView, self).get_queryset().exclude(donor=self.request.user)
+        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all())
 
 
 class MyOfferView(LoginRequiredMixin, ListView):

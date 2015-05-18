@@ -67,7 +67,7 @@ class Term(models.Model):
 
 class Offer(models.Model):
     offered_term = models.ForeignKey('Term')
-    wanted_terms = models.ManyToManyField('Term', related_name='offers')
+    wanted_terms = models.ManyToManyField('Term', related_name='offers', through='OfferWantedTerm')
     donor = models.ForeignKey('User', related_name='donated')
     bait = models.CharField(max_length=255, blank=True)
     is_available = models.BooleanField(default=True)
@@ -78,6 +78,15 @@ class Offer(models.Model):
     @property
     def enrollment(self):
         return self.offered_term.subject.enrollment
+
+
+class OfferWantedTerm(models.Model):
+    offer = models.ForeignKey('Offer')
+    term = models.ForeignKey('Term')
+
+    class Meta:
+        db_table = 'term_market_offer_wanted_terms'
+        auto_created = Offer
 
 
 class TermStudent(models.Model):
