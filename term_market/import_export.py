@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from itertools import groupby
+from operator import attrgetter
 
 from uuid import uuid4 as random_uuid
 from os.path import dirname
@@ -6,13 +13,14 @@ from os.path import dirname
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import OperationalError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
+from django.core.servers.basehttp import FileWrapper
 
 from .forms import ImportTermsForm, ImportDepartmentListForm
-from .tasks import import_terms_task, import_department_list_task
-from .models import Enrollment
+from .tasks import import_terms_task, import_department_list_task, delete_file
+from .models import Enrollment, Term, TermStudent
 from .views import LoginRequiredMixin, PermissionRequiredMixin
 
 
@@ -135,4 +143,16 @@ class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
 def export_data(request, enrollment=None):
     enrollment = get_object_or_404(Enrollment, id=enrollment)
-    pass
+    terms = Term.objects.filter(subject__enrollment=enrollment)
+    mapping = TermStudent.objects.filter(term__in=terms).order_by('user', 'term__subject')
+    filename = settings.TEMP_DIR + str(random_uuid()) + '_export.csv'
+    with open(filename, 'w') as f:
+        for student, assignments in groupby(mapping, attrgetter('user')):
+            f.write('[%s]\n' % student.transcript_no)
+            for assignment in assignments:
+                # TODO: change first part of the tuple to assignment.term.subject.external_id
+                f.write('%d:%d\n' % (0, assignment.term.external_id))
+    response = HttpResponse(FileWrapper(open(filename)), content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=export.csv'
+    delete_file.apply_async(countdown=120, args=[filename])
+    return response
