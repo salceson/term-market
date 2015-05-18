@@ -54,7 +54,7 @@ class Term(models.Model):
     end_time = models.DateTimeField()
     department_group = models.PositiveSmallIntegerField(blank=True, null=True)
     external_id = models.BigIntegerField('External ID', help_text='ID of this term in Enroll-me', blank=True, null=True)
-    students = models.ManyToManyField('User', related_name='terms')
+    students = models.ManyToManyField('User', related_name='terms', through='TermStudent')
 
     def __unicode__(self):
         return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
@@ -78,3 +78,12 @@ class Offer(models.Model):
     @property
     def enrollment(self):
         return self.offered_term.subject.enrollment
+
+
+class TermStudent(models.Model):
+    term = models.ForeignKey('Term')
+    user = models.ForeignKey('User')
+
+    class Meta:
+        db_table = 'term_market_term_students'
+        auto_created = Term
