@@ -85,10 +85,14 @@ class LogoutView(RedirectView):
 
 
 def oauth_callback(request):
+    try:
+        state = request.session['oauth_state']
+    except KeyError:
+        return redirect(settings.LOGIN_REDIRECT_URL)
     oauth = OAuth2Session(settings.OAUTH_CLIENT_ID,
                           redirect_uri=settings.OAUTH_REDIRECT_URI,
                           scope=settings.OAUTH_SCOPE,
-                          state=request.session['oauth_state'])
+                          state=state)
     del request.session['oauth_state']
     authorization_response = request.build_absolute_uri()
     oauth.fetch_token(settings.OAUTH_TOKEN_URI,
