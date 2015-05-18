@@ -125,7 +125,7 @@ import os
 os.environ['DEBUG'] = '1'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-OAUTH_REDIRECT_URI = 'http://localhost:8000/accounts/oauth-callback/'
+OAUTH_REDIRECT_URI = 'http://127.0.0.1:8000/accounts/oauth-callback/'
 OAUTH_AUTHORIZATION_URI = 'https://accounts.iiet.pl/oauth/authorize'
 OAUTH_TOKEN_URI = 'https://accounts.iiet.pl/oauth/token'
 OAUTH_LOGOUT_URI = 'https://accounts.iiet.pl/students/sign_out'
