@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from json import dumps
 
-from .models import Offer, Term
+from .models import Offer, Term, OfferWantedTerm
 from term_market.forms import OfferCreateUpdateForm
 
 
@@ -125,10 +125,11 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
 
 
 class OfferListView(LoginRequiredMixin, ListView):
-    model = Offer
+    model = OfferWantedTerm
+    template_name = 'term_market/offer_list.html'
 
     def get_queryset(self):
-        return super(OfferListView, self).get_queryset().exclude(donor=self.request.user)
+        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all())
 
 
 class MyOfferView(LoginRequiredMixin, ListView):
