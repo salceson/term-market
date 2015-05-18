@@ -24,7 +24,8 @@
                     failureContent: "<i class='fa fa-exclamation-triangle'></i> Import failed!",
                     failureClass: "alert alert-danger",
                     failureShowMsg: true,
-                    linksContent: "<a href='{% url 'admin:term_market_enrollment_changelist' %}' class='grp-button grp-default'>Return</a>",
+                    linksContent: "<a href='{% url 'admin:term_market_enrollment_changelist' %}' class='grp-button grp-default'>" +
+                    '<i class="fa fa-arrow-circle-left"></i> Return</a>',
                     processingSelector: "#processing",
                     linksSelector: "#actions"
                 });

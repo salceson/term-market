@@ -128,7 +128,8 @@ class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Export, self).get_context_data(**kwargs)
         enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
-        context.update({'title': 'Export enrollment data', 'enrollment_name': enrollment.name})
+        context.update({'title': 'Export enrollment data', 'enrollment_name': enrollment.name,
+                        'enrollment_id': enrollment.id})
         return context
 
 

@@ -18,7 +18,8 @@ from django.contrib import admin
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
     MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView
-from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, ImportDepartmentList
+from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, \
+    ImportDepartmentList, Export
 
 
 urlpatterns = [
@@ -35,6 +36,10 @@ urlpatterns = [
         ImportDepartmentListSuccess.as_view(), name='import_department_list_success'),
     url(r'^admin/term_market/enrollment/import/check/(?P<task>[a-zA-Z0-9\-]+)/$',
         'term_market.import_export.import_check', name='import_check'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/$',
+        Export.as_view(), name='export'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/download/$',
+        'term_market.import_export.export_data', name='export_download'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),
