@@ -13,7 +13,7 @@ from django.views.generic import FormView, TemplateView
 from .forms import ImportTermsForm, ImportDepartmentListForm
 from .tasks import import_terms_task, import_department_list_task
 from .models import Enrollment
-from term_market.views import LoginRequiredMixin, PermissionRequiredMixin
+from .views import LoginRequiredMixin, PermissionRequiredMixin
 
 
 def handle_uploaded_file(f, suffix):
@@ -118,3 +118,20 @@ def import_check(request, task=None):
     return JsonResponse(
         {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
     )
+
+
+class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    permission_required = 'term_market.change_enrollment'
+    object = Enrollment
+    template_name = 'term_market/admin/export.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Export, self).get_context_data(**kwargs)
+        enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
+        context.update({'title': 'Export enrollment data', 'enrollment_name': enrollment.name})
+        return context
+
+
+def export_data(request, enrollment=None):
+    enrollment = get_object_or_404(Enrollment, id=enrollment)
+    pass
