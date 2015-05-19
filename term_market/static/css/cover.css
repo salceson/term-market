@@ -2,6 +2,8 @@
  * Globals
  */
 
+@import url('cover-global.css');
+
 /* Links */
 a,
 a:focus,
@@ -215,3 +217,7 @@ body {
      height: 40px !important;
 }
 
+.form-control {
+    background-color: #333 !important;
+    color: #DDD !important;
+}

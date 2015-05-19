@@ -2,6 +2,8 @@
  * Globals
  */
 
+@import url('cover-global.css');
+
 /* Links */
 a,
 a:focus,
@@ -212,3 +214,33 @@ body {
     border-top-right-radius: 0;
 }
 
+/*Calendar style fixes*/
+
+.fc-widget-content,  .fc-widget-header  {
+    border-color: #222 !important;
+    color: #333 !important;
+}
+.fc-widget-content.fc-time {
+    color: #333 !important;
+}
+div.fc-time{
+    color: #DDD !important;
+}
+div.fc-title{
+    color: #DDD !important;
+}
+
+a.fc-event {
+    background-color: #18255D !important;
+}
+
+/*fixes invisible tables*/
+table.table-bordered,  table, th, td {
+    border-color: #333 !important;
+    color: #222 !important;
+}
+
+/*fixes invisible text issue in light skin*/
+.form-horizontal, p.lead{
+    color: #222 !important;
+}
