@@ -1,0 +1,12 @@
+[
+    {
+        "id":1,
+        "donor_id":1,
+        "offered_term_id":1,
+        "wanted_terms_id_list":[
+            2,
+            3,
+            4
+        ]
+    }
+]
