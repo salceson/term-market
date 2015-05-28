@@ -20,9 +20,9 @@ class Solver(object):
         return offers, collisions
 
     def construct_offers(self):
-        offers = {}
+        offers = []
         for offer in self.offer_dict:
-            offers[offer['id']] = (Offer(offer['id'], offer['donor_id'], offer['offered_term_id'], offer['wanted_terms_id_list']))
+            offers.append(Offer(offer['id'], offer['donor_id'], offer['offered_term_id'], offer['wanted_terms_id_list']))
         return offers
 
     def create_graph(self):
