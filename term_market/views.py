@@ -183,7 +183,6 @@ class MyOfferUpdateView(LoginRequiredMixin, MyOffersMixin, UpdateView):
 
     def form_valid(self, form):
         notify.send(self.request.user, recipient=self.request.user, verb='You edited your offer')
-        #print Notification.objects.get(recipient=self.request.user)
         return super(MyOfferUpdateView, self).form_valid(form)
 
 
@@ -208,7 +207,5 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     def get_success_url(self):
         return self.success_url
 
-
-class MyInboxView(LoginRequiredMixin, TemplateView):
-    model = Notification
-    template_name = 'term_market/inbox.html'
+    def get_queryset(self):
+        return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)

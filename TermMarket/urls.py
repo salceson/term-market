@@ -18,7 +18,7 @@ from django.contrib import admin
 import notifications
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
-    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView, MyInboxView
+    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView
 from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, \
     ImportDepartmentList, Export
 
@@ -52,6 +52,5 @@ urlpatterns = [
     url(r'^accounts/login/$', LoginView.as_view(), name='login'),
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^accounts/oauth-callback/$', 'term_market.views.oauth_callback', name='oauth_callback'),
-    url(r'^inbox/$', MyInboxView.as_view(), name='inbox'),
-    url(r'^inbox/notifications/', include(notifications.urls), name='notifications'),
+    url(r'^notifications/', include(notifications.urls), name='notifications'),
 ]

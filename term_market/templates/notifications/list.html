@@ -1,5 +1,7 @@
 {% extends 'term_market/base.html' %}
 {% block content %}
+<a href="{% url 'notifications:mark_all_as_read' %}">
+<i class="fa fa-times mark-all"> Mark all as read</i></a>
 <ul class="notifications">
   {% for notice in notifications %}
     {% include 'notifications/notice.html' %}
