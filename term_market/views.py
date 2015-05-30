@@ -2,10 +2,12 @@
 from django.contrib import auth
 
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models import F
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
+from django.views.generic.detail import SingleObjectTemplateResponseMixin, BaseDetailView
 from notifications import notify
 from notifications.models import Notification
 from requests_oauthlib import OAuth2Session
@@ -109,6 +111,22 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
+class AvailableOffersMixin(object):
+    def get_queryset(self):
+        qs = super(AvailableOffersMixin, self).get_queryset()
+        qs = qs.filter(term__subject=F('offer__offered_term__subject'), term__in=self.request.user.terms.all())
+        qs = qs.exclude(offer__donor=self.request.user)
+        qs = qs.order_by('offer')
+        return qs
+
+
+class MyOffersMixin(object):
+    def get_queryset(self):
+        qs = super(MyOffersMixin, self).get_queryset()
+        qs = qs.filter(donor=self.request.user)
+        return qs
+
+
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = 'term_market/term_list.html'
 
@@ -131,21 +149,14 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         return context_data
 
 
-class OfferListView(LoginRequiredMixin, ListView):
+class OfferListView(LoginRequiredMixin, AvailableOffersMixin, ListView):
     model = OfferWantedTerm
     template_name = 'term_market/offer_list.html'
 
-    def get_queryset(self):
-        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
-            offer__donor=self.request.user).order_by('offer')
 
-
-class MyOfferView(LoginRequiredMixin, ListView):
+class MyOfferView(LoginRequiredMixin, MyOffersMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
-
-    def get_queryset(self):
-        return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
 
 
 class MyOfferCreateView(LoginRequiredMixin, CreateView):
@@ -160,13 +171,10 @@ class MyOfferCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
+class MyOfferUpdateView(LoginRequiredMixin, MyOffersMixin, UpdateView):
     model = Offer
     form_class = OfferCreateUpdateForm
     success_url = '/my_offers'
-
-    def get_queryset(self):
-        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super(MyOfferUpdateView, self).get_form_kwargs()
@@ -178,9 +186,24 @@ class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
         return super(MyOfferUpdateView, self).form_valid(form)
 
 
-class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
+class MyOfferDeleteView(LoginRequiredMixin, MyOffersMixin, DeleteView):
     model = Offer
     success_url = '/my_offers'
 
-    def get_queryset(self):
-        return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
+
+class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView, AvailableOffersMixin):
+    model = OfferWantedTerm
+    success_url = reverse_lazy('offers')
+    template_name_suffix = '_confirm_accept'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.trade_to(self.request.user)
+        return HttpResponseRedirect(success_url)
+
+    # This is to mimic "generic" behavior of Django built-in views
+    # We may end up creating generic confirmation mixin.
+    def get_success_url(self):
+        return self.success_url
+
