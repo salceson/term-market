@@ -1,34 +1,42 @@
 {% extends 'term_market/base.html' %}
+{% load notifications_tags %}
 {% block content %}
     hello
     {% notifications_unread as unread_count %}
 
-    {% if unread_count %}
+       {% if unread_count %}
         You have <strong>{{ unread_count }}</strong> unread notifications.
     {% endif %}
 
-{#    <div class="alert alert-block alert-{{ notice.level }}">#}
-{#      <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">#}
-{#        <i class="icon-close"></i>#}
-{#      </a>#}
-{##}
-{#      <h4>#}
-{#        <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>#}
-{#        {{ notice.actor }}#}
-{#        {{ notice.verb }}#}
-{#        {% if notice.target %}#}
-{#          of {{ notice.target }}#}
-{#        {% endif %}#}
-{#      </h4>#}
-{##}
-{#      <p>{{ notice.timesince }} ago</p>#}
-{##}
-{#      <p>{{ notice.description|linebreaksbr }}</p>#}
-{##}
-{#      <div class="notice-actions">#}
-{#        {% for action in notice.data.actions %}#}
-{#          <a class="btn" href="{{ action.href }}">{{ action.title }}</a>#}
-{#        {% endfor %}#}
-{#      </div>#}
-{#    </div>#}
+     <ul class="notifications">
+      {% for notice in notifications %}
+
+
+    <div class="alert alert-block alert-{{ notice.level }}">
+      <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
+        <i class="icon-close"></i>
+      </a>
+
+      <h4>
+        <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
+        {{ notice.actor }}
+        {{ notice.verb }}
+        {% if notice.target %}
+          of {{ notice.target }}
+        {% endif %}
+      </h4>
+
+      <p>{{ notice.timesince }} ago</p>
+
+      <p>{{ notice.description|linebreaksbr }}</p>
+
+      <div class="notice-actions">
+        {% for action in notice.data.actions %}
+          <a class="btn" href="{{ action.href }}">{{ action.title }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% endfor %}
+    </ul>
 {% endblock %}

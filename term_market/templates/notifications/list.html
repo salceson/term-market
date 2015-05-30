@@ -1,0 +1,8 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+<ul class="notifications">
+  {% for notice in notifications %}
+    {% include 'notifications/notice.html' %}
+  {% endfor %}
+</ul>
+{% endblock %}
