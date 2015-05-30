@@ -17,12 +17,12 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
 from django.core.servers.basehttp import FileWrapper
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 
 from .forms import ImportTermsForm, ImportDepartmentListForm
 from .tasks import import_terms_task, import_department_list_task, delete_file
 from .models import Enrollment, Term, TermStudent
-from .views import LoginRequiredMixin, PermissionRequiredMixin
+from .views import PermissionRequiredMixin
 
 
 def handle_uploaded_file(f, suffix):
@@ -34,7 +34,7 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-class Import(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+class Import(PermissionRequiredMixin, FormView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
 
@@ -80,7 +80,7 @@ class ImportDepartmentList(Import):
                                                    '_department_list.txt', 'Import department list', **kwargs)
 
 
-class ImportSuccess(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class ImportSuccess(PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
     template_name = 'term_market/admin/import_success.html'
@@ -107,7 +107,6 @@ class ImportDepartmentListSuccess(ImportSuccess):
         super(ImportDepartmentListSuccess, self).__init__('Import department list', **kwargs)
 
 
-@login_required
 @permission_required("term_market.change_enrollment")
 def import_check(request, task=None):
     if not task:
@@ -131,7 +130,7 @@ def import_check(request, task=None):
     )
 
 
-class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class Export(PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
     template_name = 'term_market/admin/export.html'
@@ -144,7 +143,6 @@ class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         return context
 
 
-@login_required
 @permission_required("term_market.change_enrollment")
 def export_data(request, enrollment=None):
     enrollment = get_object_or_404(Enrollment, id=enrollment)
