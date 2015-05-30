@@ -26,19 +26,11 @@
                     <td>{{ e.term.subject }}</td>
                     <td>{{ e.term.teacher }}</td>
                     <td>{{ e.term.start_time|date:"D G:i" }} {{ e.term.week }}</td>
-                    <td><input type="button"onka class="btn btn-success" value="Accept offer"></td>
+                    <td><input type="button" class="btn btn-success" value="Accept offer"></td>
                 </tr>
             {% endfor %}
         {% endfor %}
         </tbody>
     </table>
-
-{% notifications_unread as unread_count %}
-{% if unread_count %}
-    You have <strong>{{ unread_count }}</strong> unread notifications.
-{% else %}
-    No new notifications.
-{% endif %}
-
 </div>
 {% endblock %}

@@ -174,7 +174,7 @@ class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        notify.send(self.request.user, recipient=self.request.user, verb='Twoja oferta została zmieniona!')
+        notify.send(self.request.user, recipient=self.request.user, verb='You edited your offer')
         #print Notification.objects.get(recipient=self.request.user)
         return super(MyOfferUpdateView, self).form_valid(form)
 
@@ -187,6 +187,6 @@ class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
         return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
 
 
-class MyInboxView(LoginRequiredMixin, View):
+class MyInboxView(LoginRequiredMixin, TemplateView):
     model = Notification
-    template_name = 'term_market/templates/term_market/inbox.html'
+    template_name = 'term_market/inbox.html'

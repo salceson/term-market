@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/$',
         ImportTerms.as_view(), name='import_terms'),
-    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/successficatio/(?P<task>[a-zA-Z0-9\-]+)/$',
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/success/(?P<task>[a-zA-Z0-9\-]+)/$',
         ImportTermsSuccess.as_view(), name='import_terms_success'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/department-list/$',
         ImportDepartmentList.as_view(), name='import_department_list'),
