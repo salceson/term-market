@@ -5,8 +5,9 @@ from django.utils.safestring import mark_safe
 
 register = Library()
 
-URL_TEMPLATE = '<a href="%s" class="grp-button grp-btn-default">%s</a>&nbsp;'
+URL_TEMPLATE = '<a href="%s" class="grp-button grp-btn-default">%s %s</a>&nbsp;'
 TD_TEMPLATE = '<td>%s</td>'
+ICON_TEMPLATE = '<i class="fa %s"></i>'
 
 
 def extend_results_with_custom_columns(cl, additional_links):
@@ -16,7 +17,8 @@ def extend_results_with_custom_columns(cl, additional_links):
             column_str = ''
             for link in column:
                 link_str = reverse(link['url_name'], kwargs={'enrollment': res.id})
-                column_str += URL_TEMPLATE % (link_str, link['url_text'])
+                icon_str = ICON_TEMPLATE % link['icon']
+                column_str += URL_TEMPLATE % (link_str, icon_str, link['url_text'])
             rl.append(mark_safe(TD_TEMPLATE % column_str))
         yield rl
 
@@ -38,11 +40,18 @@ def enrollment_result_list(cl):
         [
             {
                 'url_name': 'import_terms',
-                'url_text': 'Import terms'
+                'url_text': 'Import terms',
+                'icon': 'fa-upload'
             },
             {
                 'url_name': 'import_department_list',
-                'url_text': 'Import department list'
+                'url_text': 'Import department list',
+                'icon': 'fa-upload'
+            },
+            {
+                'url_name': 'export',
+                'url_text': 'Export',
+                'icon': 'fa-download'
             }
         ],
     ]
