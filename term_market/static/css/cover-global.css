@@ -1,0 +1,8 @@
+ /*fixes 'too long calendar' issue*/
+.fc-time-grid-container {
+    height: auto !important;
+}
+
+.fc-divider {
+    display: none !important;
+}
