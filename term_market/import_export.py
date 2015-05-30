@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from itertools import groupby
+from operator import attrgetter
 
 from uuid import uuid4 as random_uuid
 from os.path import dirname
@@ -6,14 +13,16 @@ from os.path import dirname
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import OperationalError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
+from django.core.servers.basehttp import FileWrapper
+from django.contrib.auth.decorators import permission_required
 
 from .forms import ImportTermsForm, ImportDepartmentListForm
-from .tasks import import_terms_task, import_department_list_task
-from .models import Enrollment
-from term_market.views import LoginRequiredMixin, PermissionRequiredMixin
+from .tasks import import_terms_task, import_department_list_task, delete_file
+from .models import Enrollment, Term, TermStudent
+from .views import PermissionRequiredMixin
 
 
 def handle_uploaded_file(f, suffix):
@@ -25,7 +34,7 @@ def handle_uploaded_file(f, suffix):
     return filename
 
 
-class Import(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+class Import(PermissionRequiredMixin, FormView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
 
@@ -71,7 +80,7 @@ class ImportDepartmentList(Import):
                                                    '_department_list.txt', 'Import department list', **kwargs)
 
 
-class ImportSuccess(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class ImportSuccess(PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
     template_name = 'term_market/admin/import_success.html'
@@ -98,6 +107,7 @@ class ImportDepartmentListSuccess(ImportSuccess):
         super(ImportDepartmentListSuccess, self).__init__('Import department list', **kwargs)
 
 
+@permission_required("term_market.change_enrollment")
 def import_check(request, task=None):
     if not task:
         return JsonResponse(
@@ -118,3 +128,34 @@ def import_check(request, task=None):
     return JsonResponse(
         {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
     )
+
+
+class Export(PermissionRequiredMixin, TemplateView):
+    permission_required = 'term_market.change_enrollment'
+    object = Enrollment
+    template_name = 'term_market/admin/export.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Export, self).get_context_data(**kwargs)
+        enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
+        context.update({'title': 'Export enrollment data', 'enrollment_name': enrollment.name,
+                        'enrollment_id': enrollment.id})
+        return context
+
+
+@permission_required("term_market.change_enrollment")
+def export_data(request, enrollment=None):
+    enrollment = get_object_or_404(Enrollment, id=enrollment)
+    terms = Term.objects.filter(subject__enrollment=enrollment)
+    mapping = TermStudent.objects.filter(term__in=terms).order_by('user', 'term__subject')
+    filename = settings.TEMP_DIR + str(random_uuid()) + '_export.csv'
+    with open(filename, 'w') as f:
+        for student, assignments in groupby(mapping, attrgetter('user')):
+            f.write('[%s]\n' % student.transcript_no)
+            for assignment in assignments:
+                # TODO: change first part of the tuple to assignment.term.subject.external_id
+                f.write('%d:%d\n' % (0, assignment.term.external_id))
+    response = HttpResponse(FileWrapper(open(filename)), content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=export.csv'
+    delete_file.apply_async(countdown=120, args=[filename])
+    return response

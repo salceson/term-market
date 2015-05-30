@@ -174,3 +174,9 @@ def import_department_list_task(filename, enrollment):
     finally:
         os.remove(filename)
     return True, 'OK'
+
+
+@task()
+def delete_file(filename):
+    os.remove(filename)
+    return True
