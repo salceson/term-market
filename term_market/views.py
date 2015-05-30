@@ -2,6 +2,7 @@ from django.contrib import auth
 
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models import F
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
@@ -109,13 +110,18 @@ def oauth_callback(request):
 
 class AvailableOffersMixin(object):
     def get_queryset(self):
-        return super(AvailableOffersMixin, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
-            offer__donor=self.request.user).order_by('offer')
+        qs = super(AvailableOffersMixin, self).get_queryset()
+        qs = qs.filter(term__subject=F('offer__offered_term__subject'), term__in=self.request.user.terms.all())
+        qs = qs.exclude(offer__donor=self.request.user)
+        qs = qs.order_by('offer')
+        return qs
 
 
 class MyOffersMixin(object):
     def get_queryset(self):
-        return super(MyOffersMixin, self).get_queryset().filter(donor=self.request.user)
+        qs = super(MyOffersMixin, self).get_queryset()
+        qs = qs.filter(donor=self.request.user)
+        return qs
 
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
@@ -193,4 +199,3 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     # We may end up creating generic confirmation mixin.
     def get_success_url(self):
         return self.success_url
-
