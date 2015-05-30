@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser
+from notifications import notify
 
 
 class User(AbstractUser):
@@ -84,15 +85,17 @@ class OfferWantedTerm(models.Model):
     offer = models.ForeignKey('Offer')
     term = models.ForeignKey('Term')
 
-    def trade_to(self, recipient):
+    def trade_to(self, term_recipient):
         with transaction.atomic():
             TermStudent.objects.filter(term=self.offer.offered_term, user=self.offer.donor).delete()
-            TermStudent.objects.filter(term=self.term, user=recipient).delete()
+            TermStudent.objects.filter(term=self.term, user=term_recipient).delete()
             OfferWantedTerm.objects.filter(term=self.offer.offered_term, offer__donor=self.offer.donor).delete()
-            OfferWantedTerm.objects.filter(term=self.term, offer__donor=recipient).delete()
+            OfferWantedTerm.objects.filter(term=self.term, offer__donor=term_recipient).delete()
             TermStudent(term=self.term, user=self.offer.donor).save()
-            TermStudent(term=self.offer.offered_term, user=recipient).save()
+            TermStudent(term=self.offer.offered_term, user=term_recipient).save()
             self.offer.delete()
+            notify.send(term_recipient, recipient=self.offer.donor, verb='accepted offer', target=self.term,
+                        level='success')
 
     class Meta:
         db_table = 'term_market_offer_wanted_terms'
