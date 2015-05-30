@@ -207,5 +207,3 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     def get_success_url(self):
         return self.success_url
 
-    def get_queryset(self):
-        return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
