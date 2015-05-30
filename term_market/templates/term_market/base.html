@@ -1,5 +1,6 @@
 {% load js %}
 {% load staticfiles %}
+{% load notifications_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +39,12 @@
 {% endif %}
 {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
+{% endif %}
+{% notifications_unread as unread_count %}
+{% if unread_count > 0 %}
+                <li><a href="{% url 'notifications:all' %}" class="fa fa-envelope"> {{ unread_count }}</a></li>
+{% else %}
+                <li><a href="{% url 'notifications:all' %}" class="fa fa-envelope-o"></a></li>
 {% endif %}
                 <li style="display: none;" id="skin-toggle"><span class="fa fa-adjust"></span></li>
             </ul>
