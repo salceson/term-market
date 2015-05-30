@@ -15,18 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import notifications
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
-    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView
+    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, MyInboxView
 from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, ImportDepartmentList
-
-
 urlpatterns = [
     url(r'^djangojs/', include('djangojs.urls')),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/$',
         ImportTerms.as_view(), name='import_terms'),
-    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/success/(?P<task>[a-zA-Z0-9\-]+)/$',
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/terms/successficatio/(?P<task>[a-zA-Z0-9\-]+)/$',
         ImportTermsSuccess.as_view(), name='import_terms_success'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/department-list/$',
         ImportDepartmentList.as_view(), name='import_department_list'),
@@ -46,4 +45,8 @@ urlpatterns = [
     url(r'^accounts/login/$', LoginView.as_view(), name='login'),
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^accounts/oauth-callback/$', 'term_market.views.oauth_callback', name='oauth_callback'),
+    url(r'^inbox/$', MyInboxView.as_view(), name='inbox'),
+    url(r'^inbox/notifications/', include(notifications.urls), name='notifications'),
 ]
+
+

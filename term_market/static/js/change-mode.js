@@ -1,7 +1,3 @@
-/**
- * Created by Joanna on 2015-05-12.
- */
-
 NIGHT_CSS = Django.static('css/cover.css');
 DAY_CSS = Django.static('css/cover-light.css');
 

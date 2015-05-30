@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'term_market',
     'kombu.transport.django',
     'djcelery',
+    'notifications',
 )
 
 MIDDLEWARE_CLASSES = (
