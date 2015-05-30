@@ -107,6 +107,17 @@ def oauth_callback(request):
     raise PermissionDenied('Not authenticated')
 
 
+class AvailableOffersMixin(object):
+    def get_queryset(self):
+        return super(AvailableOffersMixin, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
+            offer__donor=self.request.user).order_by('offer')
+
+
+class MyOffersMixin(object):
+    def get_queryset(self):
+        return super(MyOffersMixin, self).get_queryset().filter(donor=self.request.user)
+
+
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = 'term_market/term_list.html'
 
@@ -129,21 +140,14 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         return context_data
 
 
-class OfferListView(LoginRequiredMixin, ListView):
+class OfferListView(LoginRequiredMixin, AvailableOffersMixin, ListView):
     model = OfferWantedTerm
     template_name = 'term_market/offer_list.html'
 
-    def get_queryset(self):
-        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
-            offer__donor=self.request.user).order_by('offer')
 
-
-class MyOfferView(LoginRequiredMixin, ListView):
+class MyOfferView(LoginRequiredMixin, MyOffersMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
-
-    def get_queryset(self):
-        return super(MyOfferView, self).get_queryset().filter(donor=self.request.user)
 
 
 class MyOfferCreateView(LoginRequiredMixin, CreateView):
@@ -158,13 +162,10 @@ class MyOfferCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
+class MyOfferUpdateView(LoginRequiredMixin, MyOffersMixin, UpdateView):
     model = Offer
     form_class = OfferCreateUpdateForm
     success_url = '/my_offers'
-
-    def get_queryset(self):
-        return super(MyOfferUpdateView, self).get_queryset().filter(donor=self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super(MyOfferUpdateView, self).get_form_kwargs()
@@ -172,22 +173,15 @@ class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
+class MyOfferDeleteView(LoginRequiredMixin, MyOffersMixin, DeleteView):
     model = Offer
     success_url = '/my_offers'
 
-    def get_queryset(self):
-        return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
 
-
-class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView):
+class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView, AvailableOffersMixin):
     model = OfferWantedTerm
     success_url = reverse_lazy('offers')
     template_name_suffix = '_confirm_accept'
-
-    def get_queryset(self):
-        return super(TermOfferAcceptView, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
-            offer__donor=self.request.user).order_by('offer')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
