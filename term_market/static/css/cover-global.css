@@ -6,3 +6,15 @@
 .fc-divider {
     display: none !important;
 }
+
+.read-notification {
+    color: green;
+}
+
+.unread-notification {
+    color: indianred;
+}
+
+.notification-msg {
+    text-shadow: none;
+}
