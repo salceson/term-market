@@ -1,0 +1,11 @@
+{% extends 'term_market/base.html' %}
+{% block content %}
+    <h1>Point of no return</h1>
+    <form action="" method="post">{% csrf_token %}
+        <p class="lead">Please read this carefully. It's not just the usual yada-yada!</p>
+        <p>You are about to give <strong>{{ object.term }}</strong> to <strong>{{ object.offer.donor.get_full_name }}</strong> and take <strong>{{ object.offer.offered_term }}</strong> in exchange.</p>
+        {% if object.offer.bait %}<p>You've fallen for the following bait: <strong>{{ object.offer.bait }}</strong></p>{% endif %}
+        <input type="submit" value="Sounds good, let's do this" class="btn btn-lg btn-success">
+        <a href="{% url 'my_offers' %}" class="btn btn-lg btn-default">Nope! That's not what I meant!</a>
+    </form>
+{% endblock %}

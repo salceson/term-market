@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser
 
 
@@ -83,6 +83,16 @@ class Offer(models.Model):
 class OfferWantedTerm(models.Model):
     offer = models.ForeignKey('Offer')
     term = models.ForeignKey('Term')
+
+    def trade_to(self, recipient):
+        with transaction.atomic():
+            TermStudent.objects.filter(term=self.offer.offered_term, user=self.offer.donor).delete()
+            TermStudent.objects.filter(term=self.term, user=recipient).delete()
+            OfferWantedTerm.objects.filter(term=self.offer.offered_term, offer__donor=self.offer.donor).delete()
+            OfferWantedTerm.objects.filter(term=self.term, offer__donor=recipient).delete()
+            TermStudent(term=self.term, user=self.offer.donor).save()
+            TermStudent(term=self.offer.offered_term, user=recipient).save()
+            self.offer.delete()
 
     class Meta:
         db_table = 'term_market_offer_wanted_terms'

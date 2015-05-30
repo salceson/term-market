@@ -1,10 +1,11 @@
 from django.contrib import auth
 
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
+from django.views.generic.detail import SingleObjectTemplateResponseMixin, BaseDetailView
 from requests_oauthlib import OAuth2Session
 from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -177,3 +178,25 @@ class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return super(MyOfferDeleteView, self).get_queryset().filter(donor=self.request.user)
+
+
+class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView):
+    model = OfferWantedTerm
+    success_url = reverse_lazy('offers')
+    template_name_suffix = '_confirm_accept'
+
+    def get_queryset(self):
+        return super(TermOfferAcceptView, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
+            offer__donor=self.request.user).order_by('offer')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.trade_to(self.request.user)
+        return HttpResponseRedirect(success_url)
+
+    # This is to mimic "generic" behavior of Django built-in views
+    # We may end up creating generic confirmation mixin.
+    def get_success_url(self):
+        return self.success_url
+

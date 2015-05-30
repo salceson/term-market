@@ -26,7 +26,7 @@
                     <td>{{ e.term.subject }}</td>
                     <td>{{ e.term.teacher }}</td>
                     <td>{{ e.term.start_time|date:"D G:i" }} {{ e.term.week }}</td>
-                    <td><input type="button" class="btn btn-success" value="Accept offer"></td>
+                    <td><a href="{% url 'term_offer_accept' e.pk %}" class="btn btn-success">Accept offer</a></td>
                 </tr>
             {% endfor %}
         {% endfor %}
