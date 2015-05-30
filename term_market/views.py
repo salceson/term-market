@@ -133,8 +133,8 @@ class OfferListView(LoginRequiredMixin, ListView):
     template_name = 'term_market/offer_list.html'
 
     def get_queryset(self):
-        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all()).order_by(
-            'offer')
+        return super(OfferListView, self).get_queryset().filter(term__in=self.request.user.terms.all()).exclude(
+            offer__donor=self.request.user).order_by('offer')
 
 
 class MyOfferView(LoginRequiredMixin, ListView):
