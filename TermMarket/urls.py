@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^accounts/login/$', LoginView.as_view(), name='login'),
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^accounts/oauth-callback/$', 'term_market.views.oauth_callback', name='oauth_callback'),
-    url(r'^inbox/notifications/', include(notifications.urls), name='notifications'),
+    url(r'^notifications/', include(notifications.urls), name='notifications'),
 ]
 
 
