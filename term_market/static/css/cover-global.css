@@ -1,4 +1,4 @@
- /*fixes 'too long calendar' issue*/
+/* fixes the "too long calendar" issue */
 .fc-time-grid-container {
     height: auto !important;
 }

@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.contrib import auth
 
 from django.core.exceptions import PermissionDenied
@@ -6,6 +7,8 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
 from django.views.generic.detail import SingleObjectTemplateResponseMixin, BaseDetailView
+from notifications import notify
+from notifications.models import Notification
 from requests_oauthlib import OAuth2Session
 from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -171,6 +174,11 @@ class MyOfferUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def form_valid(self, form):
+        notify.send(self.request.user, recipient=self.request.user, verb='You edited your offer')
+        #print Notification.objects.get(recipient=self.request.user)
+        return super(MyOfferUpdateView, self).form_valid(form)
+
 
 class MyOfferDeleteView(LoginRequiredMixin, DeleteView):
     model = Offer
@@ -200,3 +208,7 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     def get_success_url(self):
         return self.success_url
 
+
+class MyInboxView(LoginRequiredMixin, TemplateView):
+    model = Notification
+    template_name = 'term_market/inbox.html'
