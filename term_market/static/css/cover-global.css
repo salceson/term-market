@@ -23,6 +23,10 @@
     color: teal;
 }
 
+.mark-read {
+    opacity: 1;
+}
+
 .mark-all {
     font-size: 2em;
     color: teal;
