@@ -17,6 +17,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
 from django.core.servers.basehttp import FileWrapper
+from django.contrib.auth.decorators import login_required, permission_required
 
 from .forms import ImportTermsForm, ImportDepartmentListForm
 from .tasks import import_terms_task, import_department_list_task, delete_file
@@ -106,6 +107,8 @@ class ImportDepartmentListSuccess(ImportSuccess):
         super(ImportDepartmentListSuccess, self).__init__('Import department list', **kwargs)
 
 
+@login_required
+@permission_required("term_market.change_enrollment")
 def import_check(request, task=None):
     if not task:
         return JsonResponse(
@@ -141,6 +144,8 @@ class Export(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         return context
 
 
+@login_required
+@permission_required("term_market.change_enrollment")
 def export_data(request, enrollment=None):
     enrollment = get_object_or_404(Enrollment, id=enrollment)
     terms = Term.objects.filter(subject__enrollment=enrollment)
