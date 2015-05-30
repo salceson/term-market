@@ -1,25 +1,28 @@
 <div class="alert alert-block alert-{{ notice.level }}">
-{% if notice.unread %}
-  <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
-    <i class="icon-close"></i>Mark as read
-  </a>
-{% endif %}
-  <span class="notification-msg">
-  <h4>
-    <i class="fa fa-envelope{% if notice.unread %} unread-notification{% else %}-o read-notification{% endif %}"></i>
-    {{ notice.actor }} 
-    {{ notice.verb }}
-    {% if notice.target %}
-      of {{ notice.target }}
-    {% endif %}
-  </h4>
-  
-  <p>{{ notice.timesince }} ago</p>
+  {% if notice.unread %}
+    <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
+      <i class="fa fa-times"> Mark as read</i>
+    </a>
+  {% else %}
+    <a class="close pull-right" href="{% url 'notifications:mark_as_unread' notice.slug %}">
+      <i class="fa fa-check"> Mark as unread</i>
+    </a>
+  {% endif %}
+  <div class="notification-msg">
+      <h4>
+        <i class="fa fa-envelope{% if notice.unread %} unread-notification{% else %}-o read-notification{% endif %}"></i>
+        {{ notice.actor }}
+        {{ notice.verb }}
+        {% if notice.target %}
+          of {{ notice.target }}
+        {% endif %}
+      </h4>
 
-    {% if notice.description != None %}
-      <p>{{ notice.description|linebreaksbr }}</p>
-    {% endif %}
-    </span>
+      <p>{{ notice.timesince }} ago</p>
+      {% if notice.description != None %}
+        <p>{{ notice.description|linebreaksbr }}</p>
+      {% endif %}
+  </div>
   <div class="notice-actions">
     {% for action in notice.data.actions %}
       <a class="btn" href="{{ action.href }}">{{ action.title }}</a>

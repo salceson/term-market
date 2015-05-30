@@ -18,3 +18,13 @@
 .notification-msg {
     text-shadow: none;
 }
+
+.close {
+    color: teal;
+}
+
+.mark-all {
+    font-size: 2em;
+    color: teal;
+    margin-bottom: 20px;
+}
