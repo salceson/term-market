@@ -1,10 +1,14 @@
 {% extends 'term_market/base.html' %}
 {% block content %}
-<a href="{% url 'notifications:mark_all_as_read' %}">
-<i class="fa fa-times mark-all"> Mark all as read</i></a>
-<ul class="notifications">
-  {% for notice in notifications %}
+<div class="text-center">
+    <h2>Your notifications</h2>
+</div>
+{% if notifications %}
+<p class="text-center"><a href="{% url 'notifications:mark_all_as_read' %}"><i class="fa fa-eye"></i> Mark all as read</a></p>
+{% for notice in notifications %}
     {% include 'notifications/notice.html' %}
-  {% endfor %}
-</ul>
+{% endfor %}
+{% else %}
+<p class="text-center">No notifications for you!</p>
+{% endif %}
 {% endblock %}

@@ -6,29 +6,3 @@
 .fc-divider {
     display: none !important;
 }
-
-.read-notification {
-    color: green;
-}
-
-.unread-notification {
-    color: indianred;
-}
-
-.notification-msg {
-    text-shadow: none;
-}
-
-.close {
-    color: teal;
-}
-
-.mark-read {
-    opacity: 1;
-}
-
-.mark-all {
-    font-size: 2em;
-    color: teal;
-    margin-bottom: 20px;
-}
