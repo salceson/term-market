@@ -27,9 +27,9 @@ class Solver(object):
 
     def create_graph(self):
         graph = nx.DiGraph()
-        for id, offer in self.offers.iteritems():
+        for offer in self.offers.values():
             graph.add_node(offer)
-        for id, offer in self.offers.iteritems():
+        for offer in self.offers.values():
             for wanted_term in offer.wanted_terms:
                 # TODO: check conflicts
                 wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers.values()))
