@@ -2,11 +2,13 @@
 {% block content %}
 <div class="text-center">
     <h2>Available offers</h2>
-</div>
+    <span style="margin:0 10px 0 0;">
     <form action="{% url 'watson:search' %}">
         <input name="q" value="{{request.GET.q}}">
         <input type="submit" value="Go">
     </form>
+    </span>
+</div>
 {% if object_list %}
 <table class="table table-bordered">
     <thead>
