@@ -1,6 +1,10 @@
 {% extends 'term_market/base.html' %}
 {% block content %}
 <div class="inner cover">
+    <form action="{% url 'watson:search' %}">
+        <input name="q" value="{{request.GET.q}}">
+        <input type="submit" value="Go">
+    </form>
     <table class="table table-bordered">
         <thead>
         <tr>

@@ -3,7 +3,7 @@ import watson
 
 
 class TermMarketConfig(AppConfig):
-    name = "TermMarket"
+    name = "term_market"
 
     def ready(self):
         offer = self.get_model("Offer")

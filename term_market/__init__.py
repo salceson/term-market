@@ -19,3 +19,5 @@ try:
     ContextSerializer.as_dict = _as_dict
 except:
     pass
+
+default_app_config = 'term_market.apps.TermMarketConfig'
