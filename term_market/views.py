@@ -1,15 +1,13 @@
 # coding=utf-8
-from django.contrib import auth
-
+from django.contrib import auth, messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import F
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, View, CreateView
+from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, CreateView
 from django.views.generic.detail import SingleObjectTemplateResponseMixin, BaseDetailView
-from notifications import notify
-from notifications.models import Notification
 from requests_oauthlib import OAuth2Session
 from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -159,10 +157,11 @@ class MyOfferView(LoginRequiredMixin, MyOffersMixin, ListView):
     template_name = 'term_market/my_offer_list.html'
 
 
-class MyOfferCreateView(LoginRequiredMixin, CreateView):
+class MyOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Offer
     form_class = OfferCreateUpdateForm
-    success_url = '/my_offers'
+    success_url = reverse_lazy('my_offers')
+    success_message = 'Offer created successfully'
 
     def get_form_kwargs(self):
         kwargs = super(MyOfferCreateView, self).get_form_kwargs()
@@ -171,39 +170,37 @@ class MyOfferCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class MyOfferUpdateView(LoginRequiredMixin, MyOffersMixin, UpdateView):
+class MyOfferUpdateView(LoginRequiredMixin, MyOffersMixin, SuccessMessageMixin, UpdateView):
     model = Offer
     form_class = OfferCreateUpdateForm
-    success_url = '/my_offers'
+    success_url = reverse_lazy('my_offers')
+    success_message = 'Offer updated successfully'
 
     def get_form_kwargs(self):
         kwargs = super(MyOfferUpdateView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
 
-    def form_valid(self, form):
-        notify.send(self.request.user, recipient=self.request.user, verb='You edited your offer')
-        return super(MyOfferUpdateView, self).form_valid(form)
-
 
 class MyOfferDeleteView(LoginRequiredMixin, MyOffersMixin, DeleteView):
     model = Offer
-    success_url = '/my_offers'
+    success_url = reverse_lazy('my_offers')
 
 
 class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView, AvailableOffersMixin):
     model = OfferWantedTerm
     success_url = reverse_lazy('offers')
     template_name_suffix = '_confirm_accept'
+    success_message = 'Offer accepted successfully'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
         self.object.trade_to(self.request.user)
+        messages.success(self.request, self.success_message)
         return HttpResponseRedirect(success_url)
 
     # This is to mimic "generic" behavior of Django built-in views
     # We may end up creating generic confirmation mixin.
     def get_success_url(self):
         return self.success_url
-
