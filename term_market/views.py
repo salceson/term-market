@@ -3,7 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db.models import F
+from django.db.models import F, Prefetch
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, CreateView
@@ -113,6 +113,7 @@ class AvailableOffersMixin(object):
     def get_queryset(self):
         qs = super(AvailableOffersMixin, self).get_queryset()
         qs = qs.filter(term__subject=F('offer__offered_term__subject'), term__in=self.request.user.terms.all())
+        qs = qs.select_related()
         qs = qs.exclude(offer__donor=self.request.user)
         qs = qs.exclude(offer__offered_term__in=self.request.user.terms.values_list('conflicting_terms', flat=True))
         qs = qs.order_by('offer')
@@ -133,7 +134,9 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         context_data = super(ScheduleView, self).get_context_data(**kwargs)
         object_list = []
         calendar_start = timezone.now()
-        for term in self.request.user.terms.all():
+        terms = self.request.user.terms
+        terms = terms.select_related()
+        for term in terms:
             if calendar_start > term.start_time:
                 calendar_start = term.start_time
             t = {
@@ -156,6 +159,14 @@ class OfferListView(LoginRequiredMixin, AvailableOffersMixin, ListView):
 class MyOfferView(LoginRequiredMixin, MyOffersMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
+
+    def get_queryset(self):
+        qs = super(MyOfferView, self).get_queryset()
+        qs = qs.select_related()
+        qs = qs.prefetch_related(
+            Prefetch('wanted_terms', queryset=Term.objects.select_related())
+        )
+        return qs
 
 
 class MyOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -193,6 +204,11 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     success_url = reverse_lazy('offers')
     template_name_suffix = '_confirm_accept'
     success_message = 'Offer accepted successfully'
+
+    def get_queryset(self):
+        qs = super(TermOfferAcceptView, self).get_queryset()
+        qs = qs.select_related()
+        return qs
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
