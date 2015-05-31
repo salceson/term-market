@@ -3,7 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db.models import F
+from django.db.models import F, Prefetch
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, CreateView
@@ -159,6 +159,14 @@ class OfferListView(LoginRequiredMixin, AvailableOffersMixin, ListView):
 class MyOfferView(LoginRequiredMixin, MyOffersMixin, ListView):
     model = Offer
     template_name = 'term_market/my_offer_list.html'
+
+    def get_queryset(self):
+        qs = super(MyOfferView, self).get_queryset()
+        qs = qs.select_related()
+        qs = qs.prefetch_related(
+            Prefetch('wanted_terms', queryset=Term.objects.select_related())
+        )
+        return qs
 
 
 class MyOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
