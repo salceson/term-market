@@ -14,23 +14,28 @@ class UserAdmin(OriginalUserAdmin):
 
 
 class TermAdmin(admin.ModelAdmin):
-    list_display = ('id', 'enrollment', 'subject', 'teacher', 'start_time', 'week')
-    list_display_links = ('id', 'subject')
+    list_display = ('id', 'external_id', 'enrollment', 'subject', 'teacher', 'start_time', 'week')
+    list_display_links = ('id', 'external_id')
     filter_horizontal = ('students', )
 
 
 class OfferAdmin(admin.ModelAdmin):
     list_display = ('id', 'enrollment', 'offered_term', 'donor', 'is_available')
-    list_display_links = ('id', 'offered_term')
+    list_display_links = ('id', )
 
 
 class EnrollmentAdmin(admin.ModelAdmin):
     change_list_template = 'term_market/admin/enrollments_change_list.html'
 
 
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'external_id', 'name')
+    list_display_links = ('id', 'external_id')
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Enrollment, EnrollmentAdmin)
-admin.site.register(Subject)
+admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Teacher)
 admin.site.register(Term, TermAdmin)
 admin.site.register(Offer, OfferAdmin)
