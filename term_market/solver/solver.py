@@ -1,10 +1,10 @@
 import json
-import networkx as nx
 import copy
+
+import networkx as nx
 
 
 class Solver(object):
-
     def __init__(self, path_to_offers_file, path_to_collisions_file):
         self.path_to_offers_file = path_to_offers_file
         self.path_to_collisions_file = path_to_collisions_file
@@ -22,7 +22,8 @@ class Solver(object):
     def construct_offers(self):
         offers = []
         for offer in self.offer_dict:
-            offers.append(Offer(offer['id'], offer['donor_id'], offer['offered_term_id'], offer['wanted_terms_id_list']))
+            offers.append(
+                Offer(offer['id'], offer['donor_id'], offer['offered_term_id'], offer['wanted_terms_id_list']))
         return offers
 
     def create_graph(self):
@@ -56,7 +57,6 @@ def step(graph):
 
 
 class Offer(object):
-
     def __init__(self, id, donor_id, offered_term_id, wanted_terms_id_list):
         self.id = id
         self.donor_id = donor_id
