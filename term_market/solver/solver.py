@@ -38,18 +38,17 @@ class Solver(object):
         return graph
 
     def solve(self):
-        return step(self.graph)
+        return step(self.graph, [])
 
 
-def step(graph):
+def step(graph, list_of_cycles):
     best = graph.number_of_nodes()
-    list_of_cycles = []
     cycles = nx.simple_cycles(graph)
     for cycle in cycles:
         graph_v2 = copy.deepcopy(graph)
-        # TODO: save removed cycles
         graph_v2.remove_nodes_from(cycle)
-        actual_best, actual_list_of_cycles = step(graph_v2)
+        list_of_cycles_v2 = copy.deepcopy(list_of_cycles)
+        actual_best, actual_list_of_cycles = step(graph_v2, list_of_cycles_v2)
         if actual_best < best:
             best = actual_best
             list_of_cycles = actual_list_of_cycles
