@@ -19,8 +19,8 @@ from django.views.generic import FormView, TemplateView
 from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import permission_required
 
-from .forms import ImportTermsForm, ImportDepartmentListForm
-from .tasks import import_terms_task, import_department_list_task, delete_file
+from .forms import ImportTermsForm, ImportDepartmentListForm, ImportConflictsForm
+from .tasks import import_terms_task, import_department_list_task, import_conflicts_task, delete_file
 from .models import Enrollment, Term, TermStudent
 from .views import PermissionRequiredMixin
 
@@ -80,6 +80,15 @@ class ImportDepartmentList(Import):
                                                    '_department_list.txt', 'Import department list', **kwargs)
 
 
+class ImportConflicts(Import):
+    form_class = ImportConflictsForm
+    template_name = "term_market/admin/import_conflicts.html"
+
+    def __init__(self, **kwargs):
+        super(ImportConflicts, self).__init__('import_conflicts_success', import_conflicts_task, '_conflicts.txt',
+                                              'Import conflicts', **kwargs)
+
+
 class ImportSuccess(PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
@@ -105,6 +114,11 @@ class ImportTermsSuccess(ImportSuccess):
 class ImportDepartmentListSuccess(ImportSuccess):
     def __init__(self, **kwargs):
         super(ImportDepartmentListSuccess, self).__init__('Import department list', **kwargs)
+
+
+class ImportConflictsSuccess(ImportSuccess):
+    def __init__(self, **kwargs):
+        super(ImportConflictsSuccess, self).__init__('Import conflicts', **kwargs)
 
 
 @permission_required("term_market.change_enrollment")
@@ -153,8 +167,7 @@ def export_data(request, enrollment=None):
         for student, assignments in groupby(mapping, attrgetter('user')):
             f.write('[%s]\n' % student.transcript_no)
             for assignment in assignments:
-                # TODO: change first part of the tuple to assignment.term.subject.external_id
-                f.write('%d:%d\n' % (0, assignment.term.external_id))
+                f.write('%d:%d\n' % (assignment.term.subject.external_id, assignment.term.external_id))
     response = HttpResponse(FileWrapper(open(filename)), content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=export.csv'
     delete_file.apply_async(countdown=120, args=[filename])

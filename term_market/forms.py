@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from crispy_forms.bootstrap import UneditableField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
-
 from django import forms
 from django.forms import ModelForm
+
 from term_market.models import Offer, Term
 from term_market.utils import instance_as_queryset
 
@@ -15,6 +14,10 @@ class ImportTermsForm(forms.Form):
 
 class ImportDepartmentListForm(forms.Form):
     file = forms.FileField(label="Department list file")
+
+
+class ImportConflictsForm(forms.Form):
+    file = forms.FileField(label="Conflicts file")
 
 
 class OfferCreateUpdateForm(ModelForm):
