@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from django import forms
@@ -53,7 +54,9 @@ class OfferCreateUpdateForm(ModelForm):
             Field('offered_term'),
             Field('wanted_terms', size='8'),
             'bait',
-            button
+            FormActions(
+                button,
+            ),
         )
 
     def save(self, *args, **kwargs):
