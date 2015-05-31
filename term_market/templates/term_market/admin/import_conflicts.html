@@ -1,0 +1,47 @@
+{% extends 'admin/base_site.html' %}
+{% load crispy_forms_tags %}
+{# BEGIN: Fix the horrid '>' in breadcumbs in grappelli admin base #}
+{% load i18n grp_tags %}
+{% block breadcrumbs %}
+    <ul>
+        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        {% if title %}
+            <li> {{ title }}</li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{# END: Fix the horrid '>' in breadcumbs in grappelli admin base #}
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+{% endblock %}
+{% block extrahead %}
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+                $("#import_form_submit").click(function () {
+                    $("#import_form").submit();
+                });
+            });
+        })(grp.jQuery);
+    </script>
+{% endblock %}
+{% block content %}
+    <h2>Enrollment: {{ enrollment_name }}</h2>
+    <p class="alert alert-danger">
+        <i class="fa fa-exclamation-triangle"></i>
+        <strong>Important!</strong>
+        Importing conflicts <strong>will remove all existing conflicts between terms</strong> from enrollment!
+    </p>
+    <form enctype="multipart/form-data" action="" method="post" id="import_form">{% csrf_token %}
+        {{ form|crispy }}
+        <a href="{% url 'admin:term_market_enrollment_changelist' %}" class="grp-button grp-delete-link">
+            <i class="fa fa-arrow-circle-left"></i>
+            Return
+        </a>
+        <a class="grp-button grp-default" id="import_form_submit">
+            <i class="fa fa-upload"></i>
+            Import
+        </a>
+    </form>
+{% endblock %}

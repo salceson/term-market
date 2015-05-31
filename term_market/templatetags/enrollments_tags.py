@@ -49,6 +49,11 @@ def enrollment_result_list(cl):
                 'icon': 'fa-upload'
             },
             {
+                'url_name': 'import_conflicts',
+                'url_text': 'Import conflicts',
+                'icon': 'fa-upload'
+            },
+            {
                 'url_name': 'export',
                 'url_text': 'Export',
                 'icon': 'fa-download'

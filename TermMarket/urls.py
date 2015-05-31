@@ -13,14 +13,16 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+import notifications
+
 from django.conf.urls import include, url
 from django.contrib import admin
-import notifications
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
     MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView
 from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, \
-    ImportDepartmentList, Export
+    ImportDepartmentList, ImportConflicts, ImportConflictsSuccess, Export
+
 
 urlpatterns = [
     url(r'^djangojs/', include('djangojs.urls')),
@@ -34,12 +36,19 @@ urlpatterns = [
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)'
         r'/import/department-list/success/(?P<task>[a-zA-Z0-9\-]+)/$',
         ImportDepartmentListSuccess.as_view(), name='import_department_list_success'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/import/conflicts/$',
+        ImportConflicts.as_view(), name='import_conflicts'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)'
+        r'/import/conflicts/success/(?P<task>[a-zA-Z0-9\-]+)/$',
+        ImportConflictsSuccess.as_view(), name='import_conflicts_success'),
     url(r'^admin/term_market/enrollment/import/check/(?P<task>[a-zA-Z0-9\-]+)/$',
         'term_market.import_export.import_check', name='import_check'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/$',
         Export.as_view(), name='export'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/download/$',
         'term_market.import_export.export_data', name='export_download'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/solver/export/download/$',
+        'term_market.solver.export_solver_data', name='solver_export_download'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),
