@@ -114,6 +114,7 @@ class AvailableOffersMixin(object):
         qs = super(AvailableOffersMixin, self).get_queryset()
         qs = qs.filter(term__subject=F('offer__offered_term__subject'), term__in=self.request.user.terms.all())
         qs = qs.exclude(offer__donor=self.request.user)
+        qs = qs.exclude(offer__offered_term__in=self.request.user.terms.values_list('conflicting_terms', flat=True))
         qs = qs.order_by('offer')
         return qs
 
