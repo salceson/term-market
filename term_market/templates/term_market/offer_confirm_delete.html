@@ -1,8 +1,12 @@
 {% extends 'term_market/base.html' %}
 {% block content %}
-    <form action="" method="post">{% csrf_token %}
-        <p class="lead">Are you sure to remove: {{ object.offered_term }}</p>
-        <input type="submit" value="Confirm deletion" class="btn btn-danger">
-        <a href="{% url 'my_offers' %}" class="btn btn-default">Cancel</a>
-    </form>
+    <div class="text-center">
+        <h1>Confirm removal</h1>
+        <form action="" method="post">{% csrf_token %}
+            <p class="lead">Make sure that's what you meant!</p>
+            <p>Do you want to remove offer of <strong>{{ object.offered_term }}</strong>?</p>
+            <input type="submit" value="Yeah, get rid of it!" class="btn btn-danger btn-lg">
+            <a href="{% url 'my_offers' %}" class="btn btn-default btn-lg">Uhmm, nah.</a>
+        </form>
+    </div>
 {% endblock %}
