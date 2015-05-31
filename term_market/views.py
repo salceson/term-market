@@ -196,6 +196,11 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     template_name_suffix = '_confirm_accept'
     success_message = 'Offer accepted successfully'
 
+    def get_queryset(self):
+        qs = super(TermOfferAcceptView, self).get_queryset()
+        qs = qs.select_related()
+        return qs
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
