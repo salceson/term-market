@@ -1,5 +1,5 @@
-NIGHT_CSS = Django.static('css/cover.css');
-DAY_CSS = Django.static('css/cover-light.css');
+NIGHT_CSS = '//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/darkly/bootstrap.min.css';
+DAY_CSS = '//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/flatly/bootstrap.min.css';
 
 nightMode = ($.cookie('skin') != 'day');
 stylesheet = $('#skin-css');

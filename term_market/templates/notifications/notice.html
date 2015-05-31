@@ -1,31 +1,25 @@
-<div class="alert alert-block alert-{{ notice.level }}">
-  {% if notice.unread %}
-    <a class="mark-read close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
-      <i class="fa fa-times"> Mark as read</i>
-    </a>
-  {% else %}
-    <a class="close pull-right" href="{% url 'notifications:mark_as_unread' notice.slug %}">
-      <i class="fa fa-check"> Mark as unread</i>
-    </a>
-  {% endif %}
-  <div class="notification-msg">
-      <h4>
-        <i class="fa fa-envelope{% if notice.unread %} unread-notification{% else %}-o read-notification{% endif %}"></i>
-        {{ notice.actor }}
-        {{ notice.verb }}
-        {% if notice.target %}
-          of {{ notice.target }}
-        {% endif %}
-      </h4>
-
-      <p>{{ notice.timesince }} ago</p>
-      {% if notice.description != None %}
-        <p>{{ notice.description|linebreaksbr }}</p>
-      {% endif %}
-  </div>
-  <div class="notice-actions">
-    {% for action in notice.data.actions %}
-      <a class="btn" href="{{ action.href }}">{{ action.title }}</a>
-    {% endfor %}
-  </div>
+<div class="panel panel-{{ notice.level }}">
+<div class="panel-heading">
+    <i class="fa fa-envelope{% if not notice.unread %}-o{% endif %}"></i> {{ notice.timesince }} ago
+    <span class="alert-{{ notice.level }}">
+{% if notice.unread %}
+        <a class="alert-link pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}"><i class="fa fa-eye"></i> Mark as read</a>
+{% else %}
+        <a class="alert-link pull-right" href="{% url 'notifications:mark_as_unread' notice.slug %}"><i class="fa fa-eye-slash"></i> Mark as unread</a>
+{% endif %}
+    </span>
+</div>
+<div class="panel-body">
+    {% firstof notice.actor.get_full_name notice.actor.get_username %} {{ notice.verb }}{% if notice.target %} of {{ notice.target }}{% endif %}
+{% if notice.description != None %}
+    <p>{{ notice.description|linebreaksbr }}</p>
+{% endif %}
+</div>
+{% if notice.data.actions %}
+<div class="panel-footer">
+{% for action in notice.data.actions %}
+<a class="btn" href="{{ action.href }}">{{ action.title }}</a>
+{% endfor %}
+</div>
+{% endif %}
 </div>
