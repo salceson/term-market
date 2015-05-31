@@ -1,0 +1,80 @@
+id	subject	class_type	group	location	date	teacher	is_certain	team_size	max_people	min_people
+645361	Algorytmy dla problemów trudnych obliczeniowo	W15		D17 2.41	Pn 11:15-12:45	Faliszewski Piotr	x		0	0
+645362	Algorytmy dla problemów trudnych obliczeniowo	L15	1	D17 3.27d	Pn 9:35-11:05 A	Faliszewski Piotr			10	0
+645363	Algorytmy dla problemów trudnych obliczeniowo	L15	2	D17 3.27d	Pn 9:35-11:05 B	Magiera Krzysztof			13	0
+645364	Algorytmy dla problemów trudnych obliczeniowo	L15	3	D17 3.27d	Pn 12:50-14:20 A	Gajęcki Marek			12	0
+645365	Algorytmy dla problemów trudnych obliczeniowo	L15	4	D17 3.27d	Pn 12:50-14:20 B	Gajęcki Marek			12	0
+645366	Algorytmy dla problemów trudnych obliczeniowo	L15	5	D17 3.27d	Wt 9:35-11:05 A	Gajęcki Marek			13	0
+645367	Algorytmy dla problemów trudnych obliczeniowo	L15	6	D17 3.27d	Wt 9:35-11:05 B	Kurdziel Marcin			13	0
+645368	Algorytmy dla problemów trudnych obliczeniowo	L15	7	D17 3.27d	Wt 11:15-12:45 A	Kurdziel Marcin			13	0
+645369	Algorytmy dla problemów trudnych obliczeniowo	L15	8	D17 3.27d	Wt 11:15-12:45 B	Magiera Krzysztof			13	0
+645370	Badania operacyjne	W15		D17 1.38	Wt 8:00-9:30	Kwiecień Joanna	x		0	0
+645371	Badania operacyjne	L15	1	B5 212	Wt 9:35-11:05 A	Chmiel Wojciech		2	12	0
+645372	Badania operacyjne	L15	2	B5 212	Wt 9:35-11:05 B	Chmiel Wojciech		2	12	0
+645373	Badania operacyjne	L15	3	B5 212	Wt 11:15-12:45 A	Kwiecień Joanna		2	8	0
+645374	Badania operacyjne	L15	4	B5 212	Wt 11:15-12:45 B	Kwiecień Joanna		2	10	0
+645375	Badania operacyjne	L15	5	B5 212	Wt 12:50-14:20 A	Kwiecień Joanna		2	12	0
+645376	Badania operacyjne	L15	6	B5 212	Wt 12:50-14:20 B	Kwiecień Joanna		2	10	0
+645377	Badania operacyjne	L15	7	B5 212	Wt 14:40-16:10 A	Kwiecień Joanna		2	12	0
+645378	Badania operacyjne	L15	8	B5 212	Wt 14:40-16:10 B	Kwiecień Joanna		2	12	0
+645335	Inżynieria oprogramowania	W30		D17 2.41	Pt 9:35-11:05	Rakoczy Witold	x		0	0
+645336	Inżynieria oprogramowania	L30	1	D17 4.27	Pn 17:50-19:20	Rakoczy Witold			11	0
+645337	Inżynieria oprogramowania	L30	2	D17 4.27	Sr 9:35-11:05	Rakoczy Witold			11	0
+645338	Inżynieria oprogramowania	L30	3	D17 4.27	Sr 12:50-14:20	Rakoczy Witold			11	0
+645339	Inżynieria oprogramowania	L30	4	D17 4.27	Wt 17:50-19:20	Kisiel-Dorohinicki Marek			-4	0
+645340	Inżynieria oprogramowania	L30	5	D17 4.27	Pt 16:15-17:45	Rakoczy Witold			11	0
+645341	Inżynieria oprogramowania	L30	6	D17 4.27	Cz 14:40-16:10	Rakoczy Witold			11	0
+645342	Inżynieria oprogramowania	L30	7	D17 4.27	Pt 12:50-14:20	Rakoczy Witold			11	0
+645343	Inżynieria oprogramowania	L30	8	D17 4.27	Pt 14:40-16:10	Rakoczy Witold			11	0
+645344	Inżynieria oprogramowania	L30	9	D17 4.27	Wt 12:50-14:20	Żabińska-Rakoczy Małgorzata			9	0
+645345	Inżynieria oprogramowania	L30	10	D17 4.27	Wt 14:40-16:10	Rakoczy Witold			11	0
+645346	Inżynieria oprogramowania	L30	11	D17 4.27	Pn 9:35-11:05	Dajda Jacek			3	0
+645347	Inżynieria oprogramowania	L30	12	D17 4.27	Pn 12:50-14:20	Dajda Jacek			9	0
+645422	Język obcy	C30		SJO	Pn 14:40-16:10	Lektorat Prowadzący	x		0	0
+645423	Język obcy	C30		SJO	Pn 16:15-17:45	Lektorat Prowadzący	x		0	0
+645424	Język obcy	C30		SJO	Cz 8:00-9:30	Lektorat Prowadzący	x		0	0
+645425	Język obcy	C30		SJO	Cz 9:35-11:05	Lektorat Prowadzący	x		0	0
+645379	Programowanie systemowe	W15		D17 2.41	Sr 11:15-12:45	Koźlak Jarosław	x		0	0
+645380	Programowanie systemowe	L15	1	D17 4.28	Sr 9:35-11:05 A	Faber Łukasz			11	0
+645381	Programowanie systemowe	L15	2	D17 4.28	Sr 9:35-11:05 B	Faber Łukasz			9	0
+645382	Programowanie systemowe	L15	3	D17 4.28	Sr 16:15-17:45 A	Faber Łukasz			10	0
+645383	Programowanie systemowe	L15	4	D17 4.28	Sr 16:15-17:45 B	Faber Łukasz			10	0
+645384	Programowanie systemowe	L15	5	D17 4.28	Sr 17:50-19:20	Faber Łukasz			10	0
+645348	Systemy rozproszone	W30		D17 2.41	Pn 8:00-9:30	Zieliński Krzysztof	x		0	0
+645349	Systemy rozproszone	L30	1	D17 4.22	Pn 9:35-11:05	Laboratorium Prowadzący			10	0
+645350	Systemy rozproszone	L30	2	D17 4.22	Pn 12:50-14:20	Laboratorium Prowadzący			11	0
+645351	Systemy rozproszone	L30	3	D17 4.22	Pn 17:50-19:20	Laboratorium Prowadzący			11	0
+645352	Systemy rozproszone	L30	4	D17 4.22	Pn 19:30-21:00	Laboratorium Prowadzący			11	0
+645353	Systemy rozproszone	L30	5	D17 4.22	Wt 9:35-11:05	Laboratorium Prowadzący			6	0
+645354	Systemy rozproszone	L30	6	D17 4.22	Wt 11:15-12:45	Laboratorium Prowadzący			11	0
+645355	Systemy rozproszone	L30	7	D17 4.22	Wt 12:50-14:20	Laboratorium Prowadzący			11	0
+645356	Systemy rozproszone	L30	8	D17 4.22	Wt 14:40-16:10	Laboratorium Prowadzący			10	0
+645357	Systemy rozproszone	L30	9	D17 4.22	Pt 8:00-9:30	Laboratorium Prowadzący			11	0
+645358	Systemy rozproszone	L30	10	D17 4.22	Pt 11:15-12:45	Laboratorium Prowadzący			8	0
+645359	Systemy rozproszone	L30	11	D17 4.22	Pt 12:50-14:20	Laboratorium Prowadzący			11	0
+645360	Systemy rozproszone	L30	12	D17 4.22	Pt 14:40-16:10	Laboratorium Prowadzący			11	0
+645392	Technologie aplikacji internetowych	W15		D17 1.38	Sr 17:50-19:20	Żmuda Daniel	x		0	0
+645393	Technologie aplikacji internetowych	L15	1	D17 4.23	Sr 12:50-14:20	Kwolek Bartosz			11	0
+645394	Technologie aplikacji internetowych	L15	2	D17 4.23	Sr 14:40-16:10	Kwolek Bartosz			9	0
+645395	Technologie aplikacji internetowych	L15	3	D17 4.23	Cz 11:15-12:45	Kwolek Bartosz			13	0
+645396	Technologie aplikacji internetowych	L15	4	D17 4.23	Cz 12:50-14:20	Kwolek Bartosz			11	0
+645397	Technologie aplikacji internetowych	L15	5	D17 4.23	Cz 14:40-16:10	Zmuda Daniel			13	0
+645398	Technologie aplikacji internetowych	L15	6	D17 4.23	Cz 16:15-17:45	Żmuda Daniel			13	0
+645399	Technologie aplikacji internetowych	L15	7	D17 4.23	Pt 8:00-9:30	Żmuda Daniel			13	0
+645400	Technologie aplikacji internetowych	L15	8	D17 4.23	Pt 12:50-14:20	Zmuda Daniel			13	0
+645385	Technologie internetu rzeczy	W15		D17 1.38	Wt 16:15-17:45	Szydło Tomasz	x		0	0
+645386	Technologie internetu rzeczy	L15	1	D17 4.22	Sr 14:40-16:10	Konieczny Marek		3	11	0
+645387	Technologie internetu rzeczy	L15	2	D17 4.22	Sr 16:15-17:45	Konieczny Marek		3	7	0
+645388	Technologie internetu rzeczy	L15	3	D17 4.22	Cz 9:35-11:05	Szydło Tomasz		3	9	0
+645389	Technologie internetu rzeczy	L15	4	D17 4.22	Cz 11:15-12:45	Szydło Tomasz		3	12	0
+645390	Technologie internetu rzeczy	L15	5	D17 4.22	Cz 12:50-14:20	Szydło Tomasz		3	12	0
+645391	Technologie internetu rzeczy	L15	6	D17 4.22	Cz 14:40-16:10	Szydło Tomasz		3	12	0
+645401	Wstęp do grafiki komputerowej	W15		D17 2.41	Sr 8:00-9:30	Alda Witold	x		0	0
+645402	Wstęp do grafiki komputerowej	L15	1	D17 4.30	Cz 11:15-12:45 A	Alda Witold			12	0
+645403	Wstęp do grafiki komputerowej	L15	2	D17 4.30	Cz 11:15-12:45 B	Alda Witold			10	0
+645404	Wstęp do grafiki komputerowej	L15	3	D17 4.30	Pt 12:50-14:20 A	Boryczko Krzysztof			9	0
+645405	Wstęp do grafiki komputerowej	L15	4	D17 4.30	Pt 12:50-14:20 B	Boryczko Krzysztof			13	0
+645406	Wstęp do grafiki komputerowej	L15	5	D17 4.30	Pt 11:15-12:45 A	Wcisło Rafał			13	0
+645407	Wstęp do grafiki komputerowej	L15	6	D17 4.30	Pt 11:15-12:45 B	Wcisło Rafał			13	0
+645408	Wstęp do grafiki komputerowej	L15	7	D17 4.30	Pt 14:40-16:10 A	Topa Paweł			13	0
+645409	Wstęp do grafiki komputerowej	L15	8	D17 4.30	Pt 14:40-16:10 B	Topa Paweł			13	0
