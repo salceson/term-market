@@ -55,8 +55,8 @@ class Term(models.Model):
     end_time = models.DateTimeField()
     department_group = models.PositiveSmallIntegerField(blank=True, null=True)
     external_id = models.BigIntegerField('External ID', help_text='ID of this term in Enroll-me', blank=True, null=True)
-    students = models.ManyToManyField('User', related_name='terms', through='TermStudent')
-    conflicting_terms = models.ManyToManyField('self', through='TermConflictingTerm')
+    students = models.ManyToManyField('User', related_name='terms', through='TermStudent', blank=True)
+    conflicting_terms = models.ManyToManyField('self', through='TermConflictingTerm', blank=True)
 
     def __unicode__(self):
         return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
