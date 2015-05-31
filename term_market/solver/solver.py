@@ -14,25 +14,25 @@ class Solver(object):
 
     def parse_input_files(self):
         with open(self.path_to_offers_file) as f:
-            offers = json.load(f)
+            offers = json.load(f)['offers']
         with open(self.path_to_collisions_file) as f:
             collisions = json.load(f)
         return offers, collisions
 
     def construct_offers(self):
-        offers = []
+        offers = {}
         for offer in self.offer_dict:
-            offers.append(
-                Offer(offer['id'], offer['donor'], offer['offered_term'], offer['wanted_terms']))
+            offers[offer['id']] = Offer(offer['id'], offer['donor'], offer['offered_term'], offer['wanted_terms'])
         return offers
 
     def create_graph(self):
         graph = nx.DiGraph()
-        for offer in self.offers:
+        for id, offer in self.offers.iteritems():
             graph.add_node(offer)
-        for offer in self.offers:
+        for id, offer in self.offers.iteritems():
             for wanted_term in offer.wanted_terms:
-                wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers))
+                # TODO: check conflicts
+                wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers.values()))
                 for wanted_offer in wanted_offers:
                     graph.add_edge(self.offers[offer.id], self.offers[wanted_offer.id])
         return graph
@@ -47,6 +47,7 @@ def step(graph):
     cycles = nx.simple_cycles(graph)
     for cycle in cycles:
         graph_v2 = copy.deepcopy(graph)
+        # TODO: save removed cycles
         graph_v2.remove_nodes_from(cycle)
         actual_best, actual_list_of_cycles = step(graph_v2)
         if actual_best < best:
