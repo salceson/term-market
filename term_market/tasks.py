@@ -8,6 +8,7 @@ sys.setdefaultencoding('utf-8')
 
 from celery import task
 from datetime import date, timedelta, datetime
+from ConfigParser import SafeConfigParser
 import os
 import re
 import csv
@@ -42,6 +43,10 @@ class TermsImportError(AbstractImportError):
 
 
 class DepartmentListImportError(AbstractImportError):
+    pass
+
+
+class ConflictsImportError(AbstractImportError):
     pass
 
 
@@ -169,6 +174,48 @@ def import_department_list_task(filename, enrollment):
                     exc = IntegrityError()
                     exc.message = e.message
                     raise exc
+    except IntegrityError as e:
+        return False, e.message
+    finally:
+        os.remove(filename)
+    return True, 'OK'
+
+
+@task()
+def import_conflicts_task(filename, enrollment):
+    try:
+        with transaction.atomic():
+            terms_parser = SafeConfigParser(allow_no_value=True)
+            terms_parser.read(filename)
+
+            enrollment_terms = Term.objects.filter(subject__enrollment=enrollment).all()
+            for term in enrollment_terms:
+                term.conflicting_terms.clear()
+
+            terms = {}
+            for subject in enrollment.subject_set.all():
+                for term in subject.term_set.all():
+                    terms[term.external_id] = term
+
+            for subj_id in terms_parser.sections():
+                if subj_id == 'kolizje':
+                    for pair, _ in terms_parser.items(subj_id):
+                        term1, term2 = pair.split(';', 1)
+
+                        subj1_id, term1_id = term1.split(',')
+                        subj1_id, term1_id = int(subj1_id), int(term1_id)
+                        if not terms[term1_id].subject.external_id:
+                            terms[term1_id].subject.external_id = subj1_id
+                            terms[term1_id].subject.save()
+
+                        subj2_id, term2_id = term2.split(',')
+                        subj2_id, term2_id = int(subj2_id), int(term2_id)
+                        if not terms[term2_id].subject.external_id:
+                            terms[term2_id].subject.external_id = subj2_id
+                            terms[term2_id].subject.save()
+
+                        terms[term1_id].conflicting_terms.add(terms[term2_id])
+                        terms[term2_id].conflicting_terms.add(terms[term1_id])
     except IntegrityError as e:
         return False, e.message
     finally:
