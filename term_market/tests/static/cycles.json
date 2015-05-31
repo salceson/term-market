@@ -7,6 +7,22 @@
       "wanted_terms": [
         2
       ]
+    },
+    {
+      "id": 2,
+      "donor": 2,
+      "offered_term": 3,
+      "wanted_terms": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "donor": 3,
+      "offered_term": 2,
+      "wanted_terms": [
+        3
+      ]
     }
   ]
 }
