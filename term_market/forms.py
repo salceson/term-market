@@ -37,10 +37,13 @@ class OfferCreateUpdateForm(ModelForm):
             button = Submit('create', 'Create offer')
             self.offered_term = kwargs['initial']['offered_term']
 
-        self.fields['offered_term'].queryset = instance_as_queryset(self.offered_term)
+        instance_qs = instance_as_queryset(self.offered_term)
+        instance_qs = instance_qs.select_related()
+        self.fields['offered_term'].queryset = instance_qs
 
         subjects = self.user.terms.values_list('subject').distinct()
         qs = Term.objects.filter(subject__in=subjects)
+        qs = qs.select_related()
         qs = qs.exclude(pk__in=self.user.terms.values_list('pk', flat=True))
         qs = qs.exclude(
             pk__in=self.user.terms.exclude(conflicting_terms__isnull=True).values_list('conflicting_terms', flat=True))
