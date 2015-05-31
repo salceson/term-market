@@ -13,15 +13,16 @@ class SolverTestCase(TestCase):
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "TermMarket.settings")
         django.setup()
 
-    def test_load_file(self):
+    def test_solve_cycles(self):
         # given
-        file1 = os.path.join(self.BASE_DIR, 'tests/static/file1.json')
-        file2 = os.path.join(self.BASE_DIR, 'tests/static/file2.json')
+        cycles = os.path.join(self.BASE_DIR, 'tests/static/cycles.json')
+        collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions.json')
+        s = solver.Solver(cycles, collisions)
 
         # when
-        s = solver.Solver(file1, file2)
+        best, list_of_cycles = s.solve()
 
         # then
-        self.assertEqual(s.offers[0].id, 1)
-        self.assertEqual(s.offers[0].donor, 1)
-        self.assertEqual(s.offers[0].offered_term, 1)
+        self.assertEqual(s.offers[1].id, 1)
+        self.assertEqual(s.offers[1].donor, 1)
+        self.assertEqual(s.offers[1].offered_term, 1)
