@@ -39,7 +39,8 @@ class OfferCreateUpdateForm(ModelForm):
         subjects = self.user.terms.values_list('subject').distinct()
         qs = Term.objects.filter(subject__in=subjects)
         qs = qs.exclude(pk__in=self.user.terms.values_list('pk', flat=True))
-        qs = qs.exclude(pk__in=self.user.terms.values_list('conflicting_terms', flat=True))
+        qs = qs.exclude(
+            pk__in=self.user.terms.exclude(conflicting_terms__isnull=True).values_list('conflicting_terms', flat=True))
         self.fields['wanted_terms'].queryset = qs
 
         self.helper.layout = Layout(
