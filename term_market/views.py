@@ -133,7 +133,9 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         context_data = super(ScheduleView, self).get_context_data(**kwargs)
         object_list = []
         calendar_start = timezone.now()
-        for term in self.request.user.terms.all():
+        terms = self.request.user.terms
+        terms = terms.select_related()
+        for term in terms:
             if calendar_start > term.start_time:
                 calendar_start = term.start_time
             t = {
