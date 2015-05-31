@@ -23,5 +23,5 @@ class SolverTestCase(TestCase):
 
         # then
         self.assertEqual(s.offers[0].id, 1)
-        self.assertEqual(s.offers[0].donor_id, 1)
-        self.assertEqual(s.offers[0].offered_term_id, 1)
+        self.assertEqual(s.offers[0].donor, 1)
+        self.assertEqual(s.offers[0].offered_term, 1)
