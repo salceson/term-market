@@ -23,7 +23,7 @@ class Solver(object):
         offers = []
         for offer in self.offer_dict:
             offers.append(
-                Offer(offer['id'], offer['donor_id'], offer['offered_term_id'], offer['wanted_terms_id_list']))
+                Offer(offer['id'], offer['donor'], offer['offered_term'], offer['wanted_terms']))
         return offers
 
     def create_graph(self):
@@ -31,8 +31,8 @@ class Solver(object):
         for offer in self.offers:
             graph.add_node(offer)
         for offer in self.offers:
-            for wanted_term in offer.wanted_terms_id_list:
-                wanted_offers = filter(lambda off: off.offered_term_id == wanted_term, list(self.offers))
+            for wanted_term in offer.wanted_terms:
+                wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers))
                 for wanted_offer in wanted_offers:
                     graph.add_edge(self.offers[offer.id], self.offers[wanted_offer.id])
         return graph
@@ -57,8 +57,8 @@ def step(graph):
 
 
 class Offer(object):
-    def __init__(self, id, donor_id, offered_term_id, wanted_terms_id_list):
+    def __init__(self, id, donor, offered_term, wanted_terms):
         self.id = id
-        self.donor_id = donor_id
-        self.offered_term_id = offered_term_id
-        self.wanted_terms_id_list = wanted_terms_id_list
+        self.donor = donor
+        self.offered_term = offered_term
+        self.wanted_terms = wanted_terms

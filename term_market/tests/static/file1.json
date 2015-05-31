@@ -1,9 +1,9 @@
 [
     {
         "id":1,
-        "donor_id":1,
-        "offered_term_id":1,
-        "wanted_terms_id_list":[
+        "donor":1,
+        "offered_term":1,
+        "wanted_terms":[
             2,
             3,
             4
