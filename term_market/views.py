@@ -166,7 +166,7 @@ class MyOfferCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super(MyOfferCreateView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
-        kwargs['initial'] = {'offered_term': get_object_or_404(Term, pk=self.kwargs['term_pk'])}
+        kwargs['initial'] = {'offered_term': get_object_or_404(self.request.user.terms, pk=self.kwargs['term_pk'])}
         return kwargs
 
 
