@@ -2,9 +2,13 @@
 {% block content %}
 <div class="text-center">
     <h2>Your notifications</h2>
-    <p><a href="{% url 'notifications:mark_all_as_read' %}"><i class="fa fa-eye"></i> Mark all as read</a></p>
 </div>
+{% if notifications %}
+<p class="text-center"><a href="{% url 'notifications:mark_all_as_read' %}"><i class="fa fa-eye"></i> Mark all as read</a></p>
 {% for notice in notifications %}
     {% include 'notifications/notice.html' %}
 {% endfor %}
+{% else %}
+<p class="text-center">No notifications for you!</p>
+{% endif %}
 {% endblock %}
