@@ -13,3 +13,34 @@
             {% endif %}
         {% endif %}
 {% endblock %}
+
+{#{% extends 'term_market/base.html' %}#}
+{#{% load watson %}#}
+{#{% block content %}#}
+{#        <h1>Search results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</h1>#}
+{#        {% if search_results %}#}
+{#            <ul>#}
+{#                {% for result in search_results %}#}
+{#                    <li>#}
+{#                        <article>#}
+{#                            <h1>#}
+{#                                {% if result.url %}<a href="{{result.url}}">{% endif %}#}
+{#                                {{result.title}}#}
+{#                                {% if result.url %}</a>{% endif %}#}
+{#                            </h1>#}
+{#                            {% if result.description %}#}
+{#                                <p>{{result.description}}</p>#}
+{#                            {% endif %}#}
+{#                        </article>#}
+{#                    </li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+{#        {% else %}#}
+{#            {% if query %}#}
+{#                <p><em>There are no results to display.</em></p>#}
+{#                <p><em>Try entering a less specific search term.</em></p>#}
+{#            {% else %}#}
+{#                <p><em>Please enter a query in the search form.</em></p>#}
+{#            {% endif %}#}
+{#        {% endif %}#}
+{#{% endblock %}#}

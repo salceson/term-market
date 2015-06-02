@@ -1,0 +1,8 @@
+<article>
+    <h1>
+        <a href="{{result.url}}">{{result.title}}</a>
+    </h1>
+    {% if obj.bait %}
+        {{obj.bait|linebreaks}}
+    {% endif %}
+</article>
