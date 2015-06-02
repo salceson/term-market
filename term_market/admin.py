@@ -26,6 +26,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 class EnrollmentAdmin(admin.ModelAdmin):
     change_list_template = 'term_market/admin/enrollments_change_list.html'
+    list_display = ('id', 'name')
 
 
 class SubjectAdmin(admin.ModelAdmin):

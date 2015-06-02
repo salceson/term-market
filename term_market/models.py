@@ -15,6 +15,10 @@ class Enrollment(models.Model):
     name = models.CharField(max_length=64)
     external_id = models.BigIntegerField('External ID', help_text='ID of this enrollment in Enroll-me', blank=True,
                                          null=True)
+    solver_use = models.BooleanField('Run solver automatically', help_text='Using the epic solver', blank=True,
+                                     default=True)
+    solver_time = models.IntegerField('Time between solver runs', default=60, blank=True,
+                                      help_text="In minutes, doesn't matter if you don't use solver")
 
     def __unicode__(self):
         return self.name
@@ -60,7 +64,7 @@ class Term(models.Model):
 
     def __unicode__(self):
         return unicode(self.subject) + ' - ' + self.start_time.strftime('%a, %H:%M') + ' ' + unicode(self.week) + \
-            ' - ' + unicode(self.teacher)
+               ' - ' + unicode(self.teacher)
 
     @property
     def enrollment(self):
