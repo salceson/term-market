@@ -1,0 +1,6 @@
+{% load watson %}
+{% if search_results %}
+        {% for search_result in search_results %}
+                {% search_result_item search_result %}
+        {% endfor %}
+{% endif %}

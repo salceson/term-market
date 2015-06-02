@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
-import watson
 
 from term_market.models import User, Enrollment, Subject, Teacher, Term, Offer
 
@@ -33,13 +32,7 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ('id', 'external_id', 'name')
     list_display_links = ('id', 'external_id')
 
-#
-# class SearchOfferAdmin(watson.SearchAdmin):
-#
-#     search_fields = ("title", "description",)  # A tuple of model fields to index.
-#
-#
-# admin.site.register(Offer, SearchOfferAdmin)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Enrollment, EnrollmentAdmin)
 admin.site.register(Subject, SubjectAdmin)
