@@ -1,8 +1,8 @@
-<article>
-    <h1>
-        <a href="{{result.url}}">{{result.title}}</a>
-    </h1>
-    {% if obj.bait %}
-        {{obj.bait|linebreaks}}
-    {% endif %}
-</article>
+<tr>
+    <td>{{ obj.donor }}</td>
+    <td>{{ obj.offered_term.subject }}</td>
+    <td>{{ obj.offered_term.start_time|date:"D, G:i" }} {{ obj.offered_term.week }} &mdash; {{ obj.offered_term.teacher }}</td>
+    <td>{{ obj.bait }}</td>
+    <td>{{ obj.term.start_time|date:"D, G:i" }} {{ obj.term.week }} &mdash; {{ obj.term.teacher }}</td>
+    <td><a href="{% url 'term_offer_accept' obj.pk %}" class="btn btn-success btn-sm">Accept offer</a></td>
+</tr>
