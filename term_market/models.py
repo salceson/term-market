@@ -18,7 +18,8 @@ class Enrollment(models.Model):
     solver_use = models.BooleanField('Run solver automatically', help_text='Using the epic solver', blank=True,
                                      default=True)
     solver_time = models.IntegerField('Time between solver runs', default=60, blank=True,
-                                      help_text="In minutes, doesn't matter if you don't use solver")
+                                      help_text="In minutes, doesn't matter if you don't use solver; 0 means running"
+                                                " the solver manually")
 
     def __unicode__(self):
         return self.name
