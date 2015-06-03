@@ -7,4 +7,4 @@ class TermMarketConfig(AppConfig):
 
     def ready(self):
         offer = self.get_model("Offer")
-        watson.register(offer.objects.filter(is_available=True))
+        watson.register(offer.objects.filter(is_available=True), fields=("offered_term", "donor", "bait"))

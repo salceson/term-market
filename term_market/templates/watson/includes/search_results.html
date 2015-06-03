@@ -1,18 +1,17 @@
 {% load watson %}
 {% if search_results %}
-        {% for search_result in search_results %}
-            {% regroup search_results by search_result.object as obj %}
-            {% for wanted_term in search_result.object.wanted_terms.all %}
-            <tr>
-            {% if forloop.first %}
-                <td rowspan="{{ search_result.object.list|length }}">{{ search_result.object.donor }}</td>
-                <td rowspan="{{ search_result.object.list|length }}">{{ search_result.object.offered_term.subject }}</td>
-                <td rowspan="{{ search_result.object.list|length }}">{{ search_result.object.offered_term.start_time|date:"D, G:i" }} {{ search_result.object.offered_term.week }} &mdash; {{ search_result.object.offered_term.teacher }}</td>
-                <td rowspan="{{ search_result.object.list|length }}">{{ search_result.object.bait }}</td>
-            {% endif %}
-                <td>{{ wanted_term.start_time|date:"D, G:i" }} {{ wanted_term.week }} &mdash; {{ wanted_term.teacher }}</td>
-                <td><a href="{% url 'term_offer_accept' wanted_term.pk %}" class="btn btn-success btn-sm">Accept offer</a></td>
-            </tr>
-            {% endfor %}
+    {% for search_result in search_results %}
+        {% for wanted_term in search_result.object.wanted_terms.all %}
+        <tr>
+        {% if forloop.first %}
+            <td rowspan="{{ search_result.object.wanted_terms.all|length }}">{{ search_result.object.donor }}</td>
+            <td rowspan="{{ search_result.object.wanted_terms.all|length }}">{{ search_result.object.offered_term.subject }}</td>
+            <td rowspan="{{ search_result.object.wanted_terms.all|length }}">{{ search_result.object.offered_term.start_time|date:"D, G:i" }} {{ search_result.object.offered_term.week }} &mdash; {{ search_result.object.offered_term.teacher }}</td>
+            <td rowspan="{{ search_result.object.wanted_terms.all|length }}">{{ search_result.object.bait }}</td>
+        {% endif %}
+            <td>{{ wanted_term.start_time|date:"D, G:i" }} {{ wanted_term.week }} &mdash; {{ wanted_term.teacher }}</td>
+            <td><a href="{% url 'term_offer_accept' wanted_term.id %}" class="btn btn-success btn-sm">Accept offer</a></td>
+        </tr>
         {% endfor %}
+    {% endfor %}
 {% endif %}
