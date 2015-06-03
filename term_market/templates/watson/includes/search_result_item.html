@@ -1,8 +1,13 @@
+{% regroup search_result by obj.offer as obj %}
+{% for wanted_term in obj.wanted_terms.all %}
 <tr>
-    <td>{{ obj.donor }}</td>
-    <td>{{ obj.offered_term.subject }}</td>
-    <td>{{ obj.offered_term.start_time|date:"D, G:i" }} {{ obj.offered_term.week }} &mdash; {{ obj.offered_term.teacher }}</td>
-    <td>{{ obj.bait }}</td>
-    <td>{{ obj.term.start_time|date:"D, G:i" }} {{ obj.term.week }} &mdash; {{ obj.term.teacher }}</td>
-    <td><a href="{% url 'term_offer_accept' obj.pk %}" class="btn btn-success btn-sm">Accept offer</a></td>
+{% if forloop.first %}
+    <td rowspan="{{ obj.list|length }}">{{ obj.grouper.donor }}</td>
+    <td rowspan="{{ obj.list|length }}">{{ obj.grouper.offered_term.subject }}</td>
+    <td rowspan="{{ obj.list|length }}">{{ obj.grouper.offered_term.start_time|date:"D, G:i" }} {{ obj.grouper.offered_term.week }} &mdash; {{ obj.grouper.offered_term.teacher }}</td>
+    <td rowspan="{{ obj.list|length }}">{{ obj.grouper.bait }}</td>
+{% endif %}
+    <td>{{ wanted_term.start_time|date:"D, G:i" }} {{ wanted_term.week }} &mdash; {{ wanted_term.teacher }}</td>
+    <td><a href="{% url 'term_offer_accept' wanted_term.pk %}" class="btn btn-success btn-sm">Accept offer</a></td>
 </tr>
+{% endfor %}
