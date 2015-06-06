@@ -27,14 +27,14 @@ class Solver(object):
 
     def create_graph(self):
         graph = nx.DiGraph()
-        for offer in self.offers.values():
-            graph.add_node(offer)
-        for offer in self.offers.values():
-            for wanted_term in offer.wanted_terms:
+        for offer_key in self.offers.keys():
+            graph.add_node(offer_key)
+        for offer_key in self.offers.keys():
+            for wanted_term in self.offers[offer_key].wanted_terms:
                 # TODO: check conflicts
                 wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers.values()))
                 for wanted_offer in wanted_offers:
-                    graph.add_edge(self.offers[offer.id], self.offers[wanted_offer.id])
+                    graph.add_edge(offer_key, wanted_offer.id)
         return graph
 
     def solve(self):
@@ -43,17 +43,21 @@ class Solver(object):
 
 def step(graph, list_of_cycles):
     best = graph.number_of_nodes()
-    cycles = nx.simple_cycles(graph)
+    # print graph
+    cycles = list(nx.simple_cycles(graph))
     for cycle in cycles:
+    # print cycles
+    #     graph_v2 = graph
         graph_v2 = copy.deepcopy(graph)
         graph_v2.remove_nodes_from(cycle)
+        # list_of_cycles_v2 = list_of_cycles
         list_of_cycles_v2 = copy.deepcopy(list_of_cycles)
         actual_best, actual_list_of_cycles = step(graph_v2, list_of_cycles_v2)
         if actual_best < best:
             best = actual_best
             list_of_cycles = actual_list_of_cycles
             list_of_cycles.append(cycle)
-    return best, list_of_cycles
+    return best, cycles
 
 
 class Offer(object):
