@@ -73,7 +73,7 @@ def is_collisional(offers, collisions, actual_list_of_cycles):
                         j = iter(c)
                         next_o_id = next(j, default=None)
                         while next_o_id is not None:
-                            if wanted_term in collisions[offers[next_o_id]]:
+                            if wanted_term in collisions[str(offers[next_o_id].offered_term)]:
                                 return True
                             if next_o_id == c[0]:
                                 break
