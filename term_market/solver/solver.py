@@ -31,7 +31,6 @@ class Solver(object):
             graph.add_node(offer_key)
         for offer_key in self.offers.keys():
             for wanted_term in self.offers[offer_key].wanted_terms:
-                # TODO: check conflicts
                 wanted_offers = filter(lambda off: off.offered_term == wanted_term, list(self.offers.values()))
                 for wanted_offer in wanted_offers:
                     graph.add_edge(offer_key, wanted_offer.id)
