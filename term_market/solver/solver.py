@@ -43,14 +43,10 @@ class Solver(object):
 
 def step(graph, list_of_cycles):
     best = graph.number_of_nodes()
-    # print graph
     cycles = list(nx.simple_cycles(graph))
     for cycle in cycles:
-    # print cycles
-    #     graph_v2 = graph
         graph_v2 = copy.deepcopy(graph)
         graph_v2.remove_nodes_from(cycle)
-        # list_of_cycles_v2 = list_of_cycles
         list_of_cycles_v2 = copy.deepcopy(list_of_cycles)
         actual_best, actual_list_of_cycles = step(graph_v2, list_of_cycles_v2)
         if actual_best < best:
