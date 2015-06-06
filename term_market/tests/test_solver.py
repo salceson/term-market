@@ -20,9 +20,10 @@ class SolverTestCase(TestCase):
         s = solver.Solver(cycles, collisions)
 
         # when
-        best, list_of_cycles = s.solve()
+        _, list_of_cycles = s.solve()
 
         # then
         self.assertEqual(s.offers[1].id, 1)
         self.assertEqual(s.offers[1].donor, 1)
         self.assertEqual(s.offers[1].offered_term, 1)
+        self.assertEqual(list_of_cycles, [[2, 1, 3]])
