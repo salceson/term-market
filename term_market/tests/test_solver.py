@@ -15,8 +15,8 @@ class SolverTestCase(TestCase):
 
     def test_solve_cycles(self):
         # given
-        cycles = os.path.join(self.BASE_DIR, 'tests/static/cycles.json')
-        collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions.json')
+        cycles = os.path.join(self.BASE_DIR, 'tests/static/offers1.json')
+        collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions1.json')
         s = solver.Solver(cycles, collisions)
 
         # when
@@ -26,4 +26,16 @@ class SolverTestCase(TestCase):
         self.assertEqual(s.offers[1].id, 1)
         self.assertEqual(s.offers[1].donor, 1)
         self.assertEqual(s.offers[1].offered_term, 1)
+        self.assertEqual(list_of_cycles, [[2, 1, 3]])
+
+    def test_solve_collisions(self):
+        # given
+        cycles = os.path.join(self.BASE_DIR, 'tests/static/offers2.json')
+        collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions2.json')
+        s = solver.Solver(cycles, collisions)
+
+        # when
+        _, list_of_cycles = s.solve()
+
+        # then
         self.assertEqual(list_of_cycles, [[2, 1, 3]])
