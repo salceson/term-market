@@ -1,13 +1,15 @@
 import json
 import copy
+import csv
 
 import networkx as nx
 
 
 class Solver(object):
-    def __init__(self, path_to_offers_file, path_to_collisions_file):
+    def __init__(self, path_to_offers_file, path_to_collisions_file, path_to_output_file):
         self.path_to_offers_file = path_to_offers_file
         self.path_to_collisions_file = path_to_collisions_file
+        self.path_to_output_file = path_to_output_file
         self.offer_dict, self.collision_dict = self.parse_input_files()
         self.offers = self.construct_offers()
         self.graph = self.create_graph()
@@ -37,7 +39,9 @@ class Solver(object):
         return graph
 
     def solve(self):
-        return step(self.offers, self.collision_dict, self.graph, [])
+        _, list_of_cycles = step(self.offers, self.collision_dict, self.graph, [])
+        export_to_file(list_of_cycles, self.path_to_output_file)
+        return list_of_cycles
 
 
 def step(offers, collisions, graph, list_of_cycles):
@@ -78,6 +82,16 @@ def is_collisional(offers, collisions, cycle, list_of_cycles):
                     if collisions_list and wanted_term in collisions_list:
                         return True
     return False
+
+
+def export_to_file(list_of_cycles, path_to_output_file):
+    with open(path_to_output_file, 'wb') as csv_file:
+        cycles_writer = csv.writer(csv_file, delimiter=':', quoting=csv.QUOTE_NONE)
+        for cycle in list_of_cycles:
+            for offer_id, next_offer_id in neighborhood(cycle):
+                if next_offer_id is None:
+                    next_offer_id = cycle[0]
+                cycles_writer.writerow([offer_id, next_offer_id])
 
 
 def neighborhood(iterable):

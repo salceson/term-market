@@ -17,10 +17,10 @@ class SolverTestCase(TestCase):
         # given
         cycles = os.path.join(self.BASE_DIR, 'tests/static/offers1.json')
         collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions1.json')
-        s = solver.Solver(cycles, collisions)
+        s = solver.Solver(cycles, collisions, 'output1.csv')
 
         # when
-        _, list_of_cycles = s.solve()
+        list_of_cycles = s.solve()
 
         # then
         self.assertEqual(s.offers[1].id, 1)
@@ -32,10 +32,10 @@ class SolverTestCase(TestCase):
         # given
         cycles = os.path.join(self.BASE_DIR, 'tests/static/offers2.json')
         collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions2.json')
-        s = solver.Solver(cycles, collisions)
+        s = solver.Solver(cycles, collisions, 'output2.csv')
 
         # when
-        _, list_of_cycles = s.solve()
+        list_of_cycles = s.solve()
 
         # then
         self.assertEqual(list_of_cycles, [[2, 1, 3]])
