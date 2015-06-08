@@ -13,9 +13,7 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.views.generic import TemplateView
 import notifications
-
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -23,6 +21,7 @@ from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, Of
     MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView
 from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, \
     ImportDepartmentList, ImportConflicts, ImportConflictsSuccess, Export
+from term_market.solver import ManualSolverRunView, ManualSolverRunningView
 
 
 urlpatterns = [
@@ -50,6 +49,10 @@ urlpatterns = [
         'term_market.import_export.export_data', name='export_download'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/solver/export/download/$',
         'term_market.solver.export_solver_data', name='solver_export_download'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/solver/run/',
+        ManualSolverRunView.as_view(), name='run_solver'),
+    url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/solver/running/',
+        ManualSolverRunningView.as_view(), name='solver_running'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^schedule/$', ScheduleView.as_view(), name='schedule'),

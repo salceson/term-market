@@ -1,3 +1,4 @@
 .idea/
 *.py[oc]
 *.sqlite3
+solver_output.csv

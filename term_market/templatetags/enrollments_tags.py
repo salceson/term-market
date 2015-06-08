@@ -57,6 +57,11 @@ def enrollment_result_list(cl):
                 'url_name': 'export',
                 'url_text': 'Export',
                 'icon': 'fa-download'
+            },
+            {
+                'url_name': 'run_solver',
+                'url_text': 'Run solver',
+                'icon': 'fa-play-circle'
             }
         ],
     ]
