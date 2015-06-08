@@ -4,7 +4,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from django import forms
 from django.conf import settings
-from django.db.models import F
 from django.forms import ModelForm
 
 from term_market.models import Offer, Term
