@@ -20,7 +20,7 @@ class TermAdmin(admin.ModelAdmin):
 
 
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('id', 'enrollment', 'offered_term', 'donor', 'is_available')
+    list_display = ('id', 'enrollment', 'offered_term', 'donor', 'bait', 'is_available')
     list_display_links = ('id', )
 
 
