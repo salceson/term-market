@@ -13,6 +13,7 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.views.generic import TemplateView
 import notifications
 
 from django.conf.urls import include, url
@@ -62,4 +63,5 @@ urlpatterns = [
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^accounts/oauth-callback/$', 'term_market.views.oauth_callback', name='oauth_callback'),
     url(r'^notifications/', include(notifications.urls), name='notifications'),
+    url(r"^search/", include("watson.urls", namespace="watson")),
 ]

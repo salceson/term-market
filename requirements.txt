@@ -25,3 +25,4 @@ six==1.9.0
 sqlparse==0.1.15
 translitcodec==0.4.0
 Werkzeug==0.10.4
+django-watson==1.1.8

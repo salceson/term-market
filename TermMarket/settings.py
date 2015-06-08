@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'notifications',
     'debug_toolbar',
     'menu',
+    'watson',
 )
 
 MIDDLEWARE_CLASSES = (

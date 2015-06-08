@@ -27,3 +27,5 @@ navbar = menu_registry['navbar']
 navbar.append(MenuItem('schedule', 'Add offer'))
 navbar.append(MenuItem('my_offers', 'Edit my offers'))
 navbar.append(MenuItem('offers', 'Browse offers'))
+
+default_app_config = 'term_market.apps.TermMarketConfig'
