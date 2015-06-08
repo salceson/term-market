@@ -19,3 +19,11 @@ try:
     ContextSerializer.as_dict = _as_dict
 except:
     pass
+
+
+from menu import menu_registry, MenuItem
+
+navbar = menu_registry['navbar']
+navbar.append(MenuItem('schedule', 'Add offer'))
+navbar.append(MenuItem('my_offers', 'Edit my offers'))
+navbar.append(MenuItem('offers', 'Browse offers'))
