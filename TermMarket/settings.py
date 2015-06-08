@@ -162,4 +162,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+TERM_MARKET_NO_SOLVER = True
+
 from local_settings import *

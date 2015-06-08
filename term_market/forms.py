@@ -3,6 +3,8 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from django import forms
+from django.conf import settings
+from django.db.models import F
 from django.forms import ModelForm
 
 from term_market.models import Offer, Term
@@ -46,8 +48,9 @@ class OfferCreateUpdateForm(ModelForm):
         qs = Term.objects.filter(subject__in=subjects)
         qs = qs.select_related()
         qs = qs.exclude(pk__in=self.user.terms.values_list('pk', flat=True))
-        qs = qs.exclude(
-            pk__in=self.user.terms.exclude(conflicting_terms__isnull=True).values_list('conflicting_terms', flat=True))
+        if settings.TERM_MARKET_NO_SOLVER:
+            qs = qs.exclude(pk__in=self.user.terms.exclude(conflicting_terms__isnull=True).values_list('conflicting_terms', flat=True))
+            qs = qs.filter(subject=self.offered_term.subject)
         self.fields['wanted_terms'].queryset = qs
 
         self.helper.layout = Layout(
