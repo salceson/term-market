@@ -1,0 +1,44 @@
+{
+  "offers": [
+    {
+      "id": 1,
+      "donor": 1,
+      "offered_term": 1,
+      "wanted_terms": [
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "donor": 2,
+      "offered_term": 3,
+      "wanted_terms": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "donor": 3,
+      "offered_term": 2,
+      "wanted_terms": [
+        3
+      ]
+    },
+    {
+      "id": 4,
+      "donor": 1,
+      "offered_term": 4,
+      "wanted_terms": [
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "donor": 4,
+      "offered_term": 5,
+      "wanted_terms": [
+        4
+      ]
+    }
+  ]
+}
