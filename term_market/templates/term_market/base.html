@@ -1,6 +1,7 @@
 {% load js %}
 {% load staticfiles %}
 {% load notifications_tags %}
+{% load menu_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,9 +30,12 @@
     <div class="container">
         <div class="navbar-header"><a class="navbar-brand" href="{% url 'index' %}">TermMarket</a></div>
         <ul class="nav navbar-nav">
-            <li><a href="{% url 'schedule' %}">Add offer</a></li>
-            <li><a href="{% url 'my_offers' %}">Edit my offers</a></li>
-            <li><a href="{% url 'offers' %}">Browse offers</a></li>
+{% menu 'navbar' as navbar %}
+{% for item in navbar %}
+{% if item.visible %}
+            <li{% if item.active %} class="active"{% endif %}><a href="{{ item.url }}">{{ item.name }}</a></li>
+{% endif %}
+{% endfor %}
             <li style="display: none;" id="skin-toggle"><a href="#"><span class="fa fa-adjust"></span></a></li>
         </ul>
 {% if user.is_authenticated %}

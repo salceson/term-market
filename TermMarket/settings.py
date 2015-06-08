@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'djcelery',
     'notifications',
     'debug_toolbar',
+    'menu',
     'watson',
 )
 
@@ -162,5 +163,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+TERM_MARKET_NO_SOLVER = True
 
 from local_settings import *

@@ -147,6 +147,8 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
                 'end': term.end_time.isoformat(),
                 'url': reverse('offer_create', kwargs={'term_pk': term.pk}),
             }
+            if term.subject.color:
+                t['color'] = term.subject.color
             object_list.append(t)
         context_data['object_list'] = mark_safe(dumps(object_list))
         context_data['calendar_start'] = calendar_start.isoformat()
