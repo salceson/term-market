@@ -3,7 +3,7 @@ import os
 import django
 from django.test import TestCase
 
-from term_market.solver import offers_solver
+from term_market.offers_solver import offers_solver
 
 
 class SolverTestCase(TestCase):
