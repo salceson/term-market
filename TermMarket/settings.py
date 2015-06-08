@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'djcelery',
     'notifications',
     'debug_toolbar',
+    'menu',
 )
 
 MIDDLEWARE_CLASSES = (
