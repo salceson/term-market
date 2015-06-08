@@ -1,3 +1,4 @@
+from colorful.fields import RGBColorField
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser
@@ -30,6 +31,7 @@ class Subject(models.Model):
     enrollment = models.ForeignKey('Enrollment')
     external_id = models.BigIntegerField('External ID', help_text='ID of this subject in Enroll-me', blank=True,
                                          null=True)
+    color = RGBColorField(blank=True)
 
     def __unicode__(self):
         return self.name
