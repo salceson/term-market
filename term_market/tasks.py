@@ -234,16 +234,24 @@ def delete_file(filename):
 @task()
 def run_solver(enrollment, offers_file, conflicts_file, output_file):
     print 'Enrollment', enrollment.id
-    solver = Solver(offers_file, conflicts_file, output_file)
-    solver.solve()
-    results = []
-    with open(output_file) as f:
-        for line in f:
-            results.append(line)
-    print results
-    os.remove(offers_file)
-    os.remove(conflicts_file)
-    os.remove(output_file)
+    enrollment.solver_running = True
+    enrollment.save()
+    try:
+        solver = Solver(offers_file, conflicts_file, output_file)
+        solver.solve()
+        results = []
+        with open(output_file) as f:
+            for line in f:
+                results.append(line)
+        print results
+    except Exception as e:
+        return False, e.message
+    finally:
+        enrollment.solver_running = False
+        enrollment.save()
+        os.remove(offers_file)
+        os.remove(conflicts_file)
+        os.remove(output_file)
     return True, 'OK'
 
 
