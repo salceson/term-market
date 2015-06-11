@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
 
+from term_market.tasks import task_check
+
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -12,8 +15,7 @@ from os.path import dirname
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.db import OperationalError
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
 from django.core.servers.basehttp import FileWrapper
@@ -121,29 +123,6 @@ class ImportConflictsSuccess(ImportSuccess):
         super(ImportConflictsSuccess, self).__init__('Import conflicts', **kwargs)
 
 
-@permission_required("term_market.change_enrollment")
-def import_check(request, task=None):
-    if not task:
-        return JsonResponse(
-            {'status': 'error', 'msg': 'Wrong task id'}
-        )
-    task_result = None
-    try:
-        task_result = import_terms_task.AsyncResult(task)
-        finished = task_result.ready()
-    except OperationalError:
-        finished = False
-    if finished and task_result.status == 'SUCCESS':
-        success, message = task_result.get()
-    else:
-        success = False
-        message = 'Unexpected error occurred during import. It may be possible that your' \
-                  ' file is not in correct format!' if finished else ''
-    return JsonResponse(
-        {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
-    )
-
-
 class Export(PermissionRequiredMixin, TemplateView):
     permission_required = 'term_market.change_enrollment'
     object = Enrollment
@@ -172,3 +151,9 @@ def export_data(request, enrollment=None):
     response['Content-Disposition'] = 'attachment; filename=export.csv'
     delete_file.apply_async(countdown=120, args=[filename])
     return response
+
+
+@permission_required("term_market.change_enrollment")
+def import_task_check(request, task=None):
+    return task_check(task, 'Unexpected error occurred during import. It may be possible that your'
+                            ' file is not in correct format!')

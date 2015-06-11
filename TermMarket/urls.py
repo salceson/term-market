@@ -42,7 +42,7 @@ urlpatterns = [
         r'/import/conflicts/success/(?P<task>[a-zA-Z0-9\-]+)/$',
         ImportConflictsSuccess.as_view(), name='import_conflicts_success'),
     url(r'^admin/term_market/enrollment/import/check/(?P<task>[a-zA-Z0-9\-]+)/$',
-        'term_market.import_export.import_check', name='import_check'),
+        'term_market.import_export.import_task_check', name='import_check'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/$',
         Export.as_view(), name='export'),
     url(r'^admin/term_market/enrollment/(?P<enrollment>[0-9]+)/export/download/$',
