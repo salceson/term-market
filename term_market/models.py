@@ -21,6 +21,8 @@ class Enrollment(models.Model):
     solver_time = models.IntegerField('Time between solver runs', default=60, blank=True,
                                       help_text="In minutes, doesn't matter if you don't use solver; 0 means running"
                                                 " the solver manually")
+    solver_running = models.BooleanField('Indicates if the solver is running', default=False, editable=False,
+                                         help_text="Can't touch this...")
 
     def __unicode__(self):
         return self.name

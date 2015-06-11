@@ -3,9 +3,6 @@
 from __future__ import absolute_import
 import sys
 
-from django.http import JsonResponse
-
-
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -15,10 +12,11 @@ import csv
 from datetime import date, timedelta, datetime
 from django.db import transaction, IntegrityError, OperationalError
 from django.conf import settings
+from django.http import JsonResponse
 import os
 import re
 from .models import Offer, Term, Teacher, Subject, User
-from .offers_solver.offers_solver import Solver
+from .offers_solver.solver import Solver
 
 WEEKDAYS = dict(Pn=0, Wt=1, Sr=2, Cz=3, Pt=4, Sb=5, Nd=6)
 DATE_PATTERN = re.compile(r'^(Pn|Wt|Sr|Cz|Pt|Sb|Nd) (0?[0-9]|1[0-9]|2[0-3]):'
