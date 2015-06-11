@@ -252,7 +252,7 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
         os.remove(offers_file)
         os.remove(conflicts_file)
         os.remove(output_file)
-    return True, len(results) + ' offers has been found'
+    return True, str(len(results)) + ' offers has been found!'
 
 
 def task_check(task, msg):
