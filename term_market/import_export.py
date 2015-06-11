@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from term_market.tasks import task_check
-
-
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -22,7 +19,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import permission_required
 
 from .forms import ImportTermsForm, ImportDepartmentListForm, ImportConflictsForm
-from .tasks import import_terms_task, import_department_list_task, import_conflicts_task, delete_file
+from .tasks import import_terms_task, import_department_list_task, import_conflicts_task, delete_file, task_check
 from .models import Enrollment, Term, TermStudent
 from .views import PermissionRequiredMixin
 
