@@ -16,7 +16,7 @@
     <script>
         (function ($) {
             $(document).ready(function () {
-                $.checkImportTask({
+                $.checkTask({
                     url: '{% url "solver_check" task %}',
                     timeout: 500,
                     successContent: "<i class='fa fa-check-circle'></i> Solver run successfully!",

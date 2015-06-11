@@ -11,7 +11,7 @@
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    $.checkImportTask = function (options) {
+    $.checkTask = function (options) {
         options = $.extend({
             url: '/',
             timeout: 500,
