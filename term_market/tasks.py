@@ -236,10 +236,10 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     print 'Enrollment', enrollment.id
     enrollment.solver_running = True
     enrollment.save()
+    results = []
     try:
         solver = Solver(offers_file, conflicts_file, output_file)
         solver.solve()
-        results = []
         with open(output_file) as f:
             for line in f:
                 results.append(line)
@@ -252,7 +252,7 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
         os.remove(offers_file)
         os.remove(conflicts_file)
         os.remove(output_file)
-    return True, 'OK'
+    return True, len(results) + ' offers has been found'
 
 
 def task_check(task, msg):
