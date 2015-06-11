@@ -20,6 +20,7 @@
             failureContent: "Failure!",
             failureClass: "",
             failureShowMsg: true,
+            successShowMsg: false,
             linksContent: "",
             processingSelector: "#processing",
             linksSelector: "#actions"
@@ -42,7 +43,11 @@
                         }
                         $(options.processingSelector).html(content).attr("class", options.failureClass);
                     } else {
-                        $(options.processingSelector).html(options.successContent).attr("class", options.successClass);
+                        content = options.successContent;
+                        if (options.successShowMsg) {
+                            content += ' ' + msg;
+                        }
+                        $(options.processingSelector).html(content).attr("class", options.successClass);
                     }
                     $(options.linksSelector).html(options.linksContent);
                 }
