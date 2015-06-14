@@ -222,7 +222,7 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
         messages.success(self.request, self.success_message)
         msg = 'Trade succeed!\n' + str(self.object.offer.donor) + ' took your offer: ' + str(
             self.object.offer.offered_term)
-        send_mail('Offer accepted!', msg, 'term.market.iiet@gmail.com', [self.object.offer.donor.email],
+        send_mail('Offer accepted!', msg, settings.EMAIL_HOST_USER, [self.object.offer.donor.email],
                   fail_silently=False)
         return HttpResponseRedirect(success_url)
 
