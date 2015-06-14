@@ -268,7 +268,6 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
                     old_term.students.remove(user)
                     new_term.students.add(user)
         except Exception as e:
-            print 'Error: ' + str(e) + ', '
             traceback.print_exc()
             err = IntegrityError()
             line_txt = str(line_no) + ': ' if use_line_no else ''
