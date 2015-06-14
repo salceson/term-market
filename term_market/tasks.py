@@ -2,7 +2,6 @@
 
 from __future__ import absolute_import
 import sys
-import traceback
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -16,6 +15,7 @@ from django.conf import settings
 from django.http import JsonResponse
 import os
 import re
+import traceback
 from .models import Offer, Term, Teacher, Subject, User
 from .offers_solver.solver import Solver
 
