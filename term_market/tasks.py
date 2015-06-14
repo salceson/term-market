@@ -255,7 +255,7 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     return True, str(len(results)) + ' offers has been found!'
 
 
-def task_check(task, msg):
+def task_check(task, error_msg):
     if not task:
         return JsonResponse(
             {'status': 'error', 'finished': False, 'success': False, 'message': 'Wrong task id'}
@@ -270,7 +270,7 @@ def task_check(task, msg):
         success, message = task_result.get()
     else:
         success = False
-        message = msg if finished else ''
+        message = error_msg if finished else ''
     return JsonResponse(
         {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
     )
