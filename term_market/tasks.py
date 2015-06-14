@@ -253,7 +253,6 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
             use_line_no = False
             with transaction.atomic():
                 offers = {o.id: o for o in Offer.objects.select_related('offered_term', 'donor').all()}
-                print offers
                 for (offer_from_id, offer_to_id) in results:
                     offer_from = offers[offer_from_id]
                     offer_to = offers[offer_to_id]
