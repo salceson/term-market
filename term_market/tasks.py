@@ -241,17 +241,17 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     try:
         line_no = 1
         use_line_no = True
-        try:
-            solver = Solver(offers_file, conflicts_file, output_file)
-            solver.solve()
-            with open(output_file) as f:
-                solver_reader = csv.reader(f, delimiter=':')
-                for row in solver_reader:
-                    results.append((int(row[0]), int(row[1])))
-                    line_no += 1
-            print results
-            use_line_no = False
-            with transaction.atomic():
+        solver = Solver(offers_file, conflicts_file, output_file)
+        solver.solve()
+        with open(output_file) as f:
+            solver_reader = csv.reader(f, delimiter=':')
+            for row in solver_reader:
+                results.append((int(row[0]), int(row[1])))
+                line_no += 1
+        print results
+        use_line_no = False
+        with transaction.atomic():
+            try:
                 offers = {o.id: o for o in Offer.objects.select_related('offered_term', 'donor').all()}
                 for (offer_from_id, offer_to_id) in results:
                     offer_from = offers[offer_from_id]
@@ -267,12 +267,12 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
 
                     old_term.students.remove(user)
                     new_term.students.add(user)
-        except Exception as e:
-            traceback.print_exc()
-            err = IntegrityError()
-            line_txt = str(line_no) + ': ' if use_line_no else ''
-            err.message = line_txt + str(e.message)
-            raise err
+            except Exception as e:
+                traceback.print_exc()
+                err = IntegrityError()
+                line_txt = str(line_no) + ': ' if use_line_no else ''
+                err.message = line_txt + str(e.message)
+                raise err
     except IntegrityError as e:
         return False, e.message
     finally:
