@@ -1,27 +1,18 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4 as random_uuid
+from os.path import dirname
+import json
 
 from django.contrib.auth.decorators import permission_required
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.forms import Form
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import FormView, TemplateView
 
 from .models import Enrollment, Offer, Term
+from .tasks import run_solver, task_check
 from .views import PermissionRequiredMixin
-
-
-@permission_required("term_market.change_enrollment")
-def export_solver_data(request, enrollment=None):
-    uuid = str(random_uuid())
-    print uuid
-    enrollment = get_object_or_404(Enrollment, id=enrollment)
-    conflicts = get_conflicts_for_enrollment(enrollment)
-    print conflicts
-    offers = get_offers(enrollment)
-    print offers
-    return JsonResponse({"conflicts": conflicts, "offers": offers})
 
 
 def get_conflicts_for_enrollment(enrollment):
@@ -58,11 +49,25 @@ class ManualSolverRunView(PermissionRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        # TODO: Proper actions here (running the solver)
+        enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
+        uuid = str(random_uuid())
+        directory = settings.TEMP_DIR
+        filename_prefix = dirname(directory) + '/' + uuid
+        offers_file = filename_prefix + '_offers.json'
+        conflicts_file = filename_prefix + '_conflicts.json'
+        conflicts = get_conflicts_for_enrollment(enrollment)
+        offers = get_offers(enrollment)
+        with open(offers_file, 'w') as o:
+            json.dump(offers, o)
+        with open(conflicts_file, 'w') as c:
+            json.dump(conflicts, c)
+        output_file = filename_prefix + '_output.csv'
+        result = run_solver.apply_async(args=(enrollment, offers_file, conflicts_file, output_file))
+        self.task_id = str(result.task_id)
         return super(ManualSolverRunView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('solver_running', kwargs={'enrollment': self.kwargs['enrollment']})
+        return reverse('solver_running', kwargs={'enrollment': self.kwargs['enrollment'], 'task': self.task_id})
 
 
 class ManualSolverRunningView(PermissionRequiredMixin, TemplateView):
@@ -73,5 +78,11 @@ class ManualSolverRunningView(PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ManualSolverRunningView, self).get_context_data(**kwargs)
         enrollment = get_object_or_404(Enrollment, id=self.kwargs['enrollment'])
-        context.update({'title': 'Run solver', 'enrollment_name': enrollment.name})
+        task = self.kwargs['task']
+        context.update({'title': 'Run solver', 'enrollment_name': enrollment.name, 'task': task})
         return context
+
+
+@permission_required("term_market.change_enrollment")
+def solver_task_check(request, task=None):
+    return task_check(task, 'Unexpected error occurred during running solver!')

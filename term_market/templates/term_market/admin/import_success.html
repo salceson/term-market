@@ -12,11 +12,11 @@
 {% endblock %}
 {# END: Fix the horrid '>' in breadcumbs in grappelli admin base #}
 {% block extrahead %}
-    <script src="{% static 'js/admin_background_import.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/admin_background_task_check.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
         (function ($) {
             $(document).ready(function () {
-                $.checkImportTask({
+                $.checkTask({
                     url: '{% url "import_check" task %}',
                     timeout: 500,
                     successContent: "<i class='fa fa-check-circle'></i> Import successful!",

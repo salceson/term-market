@@ -31,7 +31,8 @@
     <p class="alert alert-danger">
         <i class="fa fa-exclamation-triangle"></i>
         <strong>Important!</strong>
-        Running solver will <strong>disable the ability to create, modify or delete offers</strong> in the enrollment!
+        Running solver will <strong>disable the ability to create, modify or delete offers during its run</strong>
+        in the enrollment!
     </p>
     <form enctype="multipart/form-data" action="" method="post" id="runner_form">{% csrf_token %}
         {{ form|crispy }}

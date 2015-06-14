@@ -3,7 +3,7 @@ import os
 import django
 from django.test import TestCase
 
-from term_market.offers_solver import offers_solver
+from term_market.offers_solver import solver
 
 
 class SolverTestCase(TestCase):
@@ -17,7 +17,7 @@ class SolverTestCase(TestCase):
         # given
         cycles = os.path.join(self.BASE_DIR, 'tests/static/offers1.json')
         collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions1.json')
-        s = offers_solver.Solver(cycles, collisions, 'solver_output.csv')
+        s = solver.Solver(cycles, collisions, 'solver_output.csv')
 
         # when
         list_of_cycles = s.solve()
@@ -32,7 +32,7 @@ class SolverTestCase(TestCase):
         # given
         cycles = os.path.join(self.BASE_DIR, 'tests/static/offers2.json')
         collisions = os.path.join(self.BASE_DIR, 'tests/static/collisions2.json')
-        s = offers_solver.Solver(cycles, collisions, 'solver_output.csv')
+        s = solver.Solver(cycles, collisions, 'solver_output.csv')
 
         # when
         list_of_cycles = s.solve()
