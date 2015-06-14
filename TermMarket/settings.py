@@ -175,3 +175,5 @@ EMAIL_PORT = 587
 OAUTH_CLIENT_ID = '62fc662fffaac9cd8cc7fd1a5da2540d54e8a43127de231df0bd71f890822e87'
 OAUTH_CLIENT_SECRET = '2b821b0995eff7d088b7f7521681b37faf0dab2fb9e24205e9212abc50fc8e61'
 TEMP_DIR = '/tmp/'
+
+from local_settings import *
