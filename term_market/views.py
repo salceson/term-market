@@ -220,7 +220,7 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
         success_url = self.get_success_url()
         self.object.trade_to(self.request.user)
         messages.success(self.request, self.success_message)
-        msg = 'Trade succeed!\n' + str(self.object.offer.donor) + ' took your offer for ' + str(
+        msg = 'Trade succeed!\n' + str(self.object.offer.donor) + ' took your offer: ' + str(
             self.object.offer.offered_term)
         send_mail('Offer accepted!', msg, 'term.market.iiet@gmail.com', [self.object.offer.donor.email],
                   fail_silently=False)
