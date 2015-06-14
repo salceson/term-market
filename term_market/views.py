@@ -2,6 +2,7 @@
 from django.contrib import auth, messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import F, Prefetch
 from django.shortcuts import redirect, get_object_or_404
@@ -219,6 +220,9 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
         success_url = self.get_success_url()
         self.object.trade_to(self.request.user)
         messages.success(self.request, self.success_message)
+        msg = 'Trade succeed!\n'
+        send_mail('Offer accepted!', msg, 'term.market.iiet@gmail.com', [self.request.user.email],
+                  fail_silently=False)
         return HttpResponseRedirect(success_url)
 
     # This is to mimic "generic" behavior of Django built-in views

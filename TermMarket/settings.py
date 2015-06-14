@@ -166,4 +166,11 @@ MESSAGE_TAGS = {
 
 TERM_MARKET_NO_SOLVER = True
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'term.market.iiet'
+# has to be fixed >.<
+EMAIL_HOST_PASSWORD = 'termmarket123'
+EMAIL_PORT = 587
+
 from local_settings import *
