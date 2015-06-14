@@ -239,19 +239,19 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     enrollment.save()
     results = []
     try:
-        line_no = 1
-        use_line_no = True
-        solver = Solver(offers_file, conflicts_file, output_file)
-        solver.solve()
-        with open(output_file) as f:
-            solver_reader = csv.reader(f, delimiter=':')
-            for row in solver_reader:
-                results.append((int(row[0]), int(row[1])))
-                line_no += 1
-        print results
-        use_line_no = False
         with transaction.atomic():
+            line_no = 1
+            use_line_no = True
             try:
+                solver = Solver(offers_file, conflicts_file, output_file)
+                solver.solve()
+                with open(output_file) as f:
+                    solver_reader = csv.reader(f, delimiter=':')
+                    for row in solver_reader:
+                        results.append((int(row[0]), int(row[1])))
+                        line_no += 1
+                print results
+                use_line_no = False
                 offers = {o.id: o for o in Offer.objects.select_related('offered_term', 'donor').all()}
                 for (offer_from_id, offer_to_id) in results:
                     offer_from = offers[offer_from_id]
