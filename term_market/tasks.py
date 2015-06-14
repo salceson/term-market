@@ -15,6 +15,7 @@ from django.conf import settings
 from django.http import JsonResponse
 import os
 import re
+import traceback
 from .models import Offer, Term, Teacher, Subject, User
 from .offers_solver.solver import Solver
 
@@ -238,13 +239,41 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     enrollment.save()
     results = []
     try:
-        solver = Solver(offers_file, conflicts_file, output_file)
-        solver.solve()
-        with open(output_file) as f:
-            for line in f:
-                results.append(line)
-        print results
-    except Exception as e:
+        with transaction.atomic():
+            line_no = 1
+            use_line_no = True
+            try:
+                solver = Solver(offers_file, conflicts_file, output_file)
+                solver.solve()
+                with open(output_file) as f:
+                    solver_reader = csv.reader(f, delimiter=':')
+                    for row in solver_reader:
+                        results.append((int(row[0]), int(row[1])))
+                        line_no += 1
+                print results
+                use_line_no = False
+                offers = {o.id: o for o in Offer.objects.select_related('offered_term', 'donor').all()}
+                for (offer_from_id, offer_to_id) in results:
+                    offer_from = offers[offer_from_id]
+                    offer_to = offers[offer_to_id]
+
+                    offer_from.is_available = False
+                    offer_from.save()
+
+                    old_term = offer_from.offered_term
+                    new_term = offer_to.offered_term
+
+                    user = offer_from.donor
+
+                    old_term.students.remove(user)
+                    new_term.students.add(user)
+            except Exception as e:
+                traceback.print_exc()
+                err = IntegrityError()
+                line_txt = str(line_no) + ': ' if use_line_no else ''
+                err.message = line_txt + str(e.message)
+                raise err
+    except IntegrityError as e:
         return False, e.message
     finally:
         enrollment.solver_running = False
@@ -255,7 +284,7 @@ def run_solver(enrollment, offers_file, conflicts_file, output_file):
     return True, str(len(results)) + ' offers has been found!'
 
 
-def task_check(task, msg):
+def task_check(task, error_msg):
     if not task:
         return JsonResponse(
             {'status': 'error', 'finished': False, 'success': False, 'message': 'Wrong task id'}
@@ -270,7 +299,7 @@ def task_check(task, msg):
         success, message = task_result.get()
     else:
         success = False
-        message = msg if finished else ''
+        message = error_msg if finished else ''
     return JsonResponse(
         {'status': 'ok', 'finished': finished, 'success': success, 'message': message}
     )

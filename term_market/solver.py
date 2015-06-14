@@ -25,7 +25,7 @@ def get_conflicts_for_enrollment(enrollment):
 
 def get_offers(enrollment):
     offers_list = []
-    offers = Offer.objects.filter(offered_term__subject__enrollment=enrollment)
+    offers = Offer.objects.filter(offered_term__subject__enrollment=enrollment, is_available=True)
     for offer in offers:
         offers_list.append({
             "id": offer.id,
