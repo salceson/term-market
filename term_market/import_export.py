@@ -137,7 +137,8 @@ class Export(PermissionRequiredMixin, TemplateView):
 def export_data(request, enrollment=None):
     enrollment = get_object_or_404(Enrollment, id=enrollment)
     terms = Term.objects.filter(subject__enrollment=enrollment)
-    mapping = TermStudent.objects.filter(term__in=terms).order_by('user', 'term__subject')
+    mapping = TermStudent.objects.filter(term__in=terms).select_related('term', 'term__subject').order_by(
+        'user', 'term__subject')
     filename = settings.TEMP_DIR + str(random_uuid()) + '_export.csv'
     with open(filename, 'w') as f:
         for student, assignments in groupby(mapping, attrgetter('user')):
