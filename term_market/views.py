@@ -220,9 +220,11 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
         success_url = self.get_success_url()
         self.object.trade_to(self.request.user)
         messages.success(self.request, self.success_message)
-        msg = 'Trade succeed!\n'
-        send_mail('Offer accepted!', msg, 'term.market.iiet@gmail.com', [self.request.user.email],
+        msg = 'Trade succeed!\n' + str(self.object.offer.donor) + ' took your offer for ' + str(
+            self.object.offer.offered_term)
+        send_mail('Offer accepted!', msg, 'term.market.iiet@gmail.com', [self.object.offer.donor.email],
                   fail_silently=False)
+        print self.object.offer.donor.email
         return HttpResponseRedirect(success_url)
 
     # This is to mimic "generic" behavior of Django built-in views
