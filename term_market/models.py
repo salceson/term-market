@@ -128,3 +128,8 @@ class TermConflictingTerm(models.Model):
     class Meta:
         db_table = 'term_market_term_conflicting_terms'
         auto_created = Term
+
+
+class BugReports(models.Model):
+    user = models.ForeignKey('User')
+    message = models.CharField('massage', max_length=255)

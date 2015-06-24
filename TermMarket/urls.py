@@ -16,9 +16,11 @@ Including another URLconf
 import notifications
 from django.conf.urls import include, url
 from django.contrib import admin
+from term_market import views
 
 from term_market.views import IndexView, LoginView, LogoutView, ScheduleView, OfferListView, MyOfferView, \
-    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView
+    MyOfferDeleteView, MyOfferUpdateView, MyOfferCreateView, TermOfferAcceptView, ReportCreateView, \
+    ReportView
 from term_market.import_export import ImportTerms, ImportTermsSuccess, ImportDepartmentListSuccess, \
     ImportDepartmentList, ImportConflicts, ImportConflictsSuccess, Export
 from term_market.solver import ManualSolverRunView, ManualSolverRunningView
@@ -63,6 +65,7 @@ urlpatterns = [
     url(r'^offers/$', OfferListView.as_view(), name='offers'),
     url(r'^term_offer/(?P<pk>[0-9]+)/accept$', TermOfferAcceptView.as_view(), name='term_offer_accept'),
     url(r'^accounts/login/$', LoginView.as_view(), name='login'),
+    url(r'^report/', ReportCreateView.as_view(), name='report'),
     url(r'^accounts/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^accounts/oauth-callback/$', 'term_market.views.oauth_callback', name='oauth_callback'),
     url(r'^notifications/', include(notifications.urls), name='notifications'),

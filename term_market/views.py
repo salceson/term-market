@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import F, Prefetch
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, RedirectView, ListView, DeleteView, UpdateView, CreateView
 from django.views.generic.detail import SingleObjectTemplateResponseMixin, BaseDetailView
@@ -19,8 +19,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from json import dumps
 
-from .models import Offer, Term, OfferWantedTerm
-from term_market.forms import OfferCreateUpdateForm
+from .models import Offer, Term, OfferWantedTerm, BugReports
+from term_market.forms import OfferCreateUpdateForm, ReportForm
 
 
 class LoginRequiredMixin(object):
@@ -204,6 +204,25 @@ class MyOfferDeleteView(LoginRequiredMixin, MyOffersMixin, DeleteView):
     success_url = reverse_lazy('my_offers')
 
 
+class ReportCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = BugReports
+    form_class = ReportForm
+    success_url = reverse_lazy('report')
+    success_message = 'Report send successfully'
+
+    def get_form_kwargs(self):
+        kwargs = super(ReportCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+
+class ReportView(LoginRequiredMixin, TemplateView):
+    permanent = False
+    template_name = 'term_market/report.html'
+
+
+
+
 class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, BaseDetailView, AvailableOffersMixin):
     model = OfferWantedTerm
     success_url = reverse_lazy('offers')
@@ -230,3 +249,18 @@ class TermOfferAcceptView(LoginRequiredMixin, SingleObjectTemplateResponseMixin,
     # We may end up creating generic confirmation mixin.
     def get_success_url(self):
         return self.success_url
+
+
+def report_form(request):
+    if request.method == 'GET':
+        form = ReportForm()
+    else:
+        form = ReportForm(request.POST)
+
+        if form.is_valid():
+            message = form.cleaned_data['message']
+
+    return render(request, './term_market/report.html', {
+        'form': form
+    })
+

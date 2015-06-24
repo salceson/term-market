@@ -6,7 +6,7 @@ from django import forms
 from django.conf import settings
 from django.forms import ModelForm
 
-from term_market.models import Offer, Term
+from term_market.models import Offer, Term, BugReports
 from term_market.utils import instance_as_queryset
 
 
@@ -69,3 +69,30 @@ class OfferCreateUpdateForm(ModelForm):
     class Meta:
         model = Offer
         fields = ['offered_term', 'wanted_terms', 'bait']
+
+
+class ReportForm(ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(ReportForm, self).__init__(*args, **kwargs)
+        self.user = user
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+        self.helper.layout = Layout(
+            Field('message'),
+            FormActions(
+                Submit('submit', 'Submit'),
+            ),
+        )
+
+    def save(self, *args, **kwargs):
+        self.instance.user = self.user
+        return super(ReportForm, self).save(*args, **kwargs)
+
+    class Meta:
+        fields = ['message']
+        model = BugReports
+        widgets = {
+            'message': forms.Textarea(attrs={'cols': 80, 'rows': 20})
+        }

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 
-from term_market.models import User, Enrollment, Subject, Teacher, Term, Offer
+from term_market.models import User, Enrollment, Subject, Teacher, Term, Offer, BugReports
 
 
 class UserAdmin(OriginalUserAdmin):
@@ -34,9 +34,15 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'external_id')
 
 
+class BugReportsAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user')
+    list_display_links = ('message', )
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Enrollment, EnrollmentAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Teacher)
 admin.site.register(Term, TermAdmin)
 admin.site.register(Offer, OfferAdmin)
+admin.site.register(BugReports, BugReportsAdmin)
