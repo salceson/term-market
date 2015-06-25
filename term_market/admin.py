@@ -35,7 +35,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
 
 class BugReportsAdmin(admin.ModelAdmin):
-    list_display = ('message', 'user')
+    list_display = ('message', 'user', 'date')
     list_display_links = ('message', )
 
 

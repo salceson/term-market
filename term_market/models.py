@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser
 from notifications import notify
+from datetime import datetime
 
 
 class User(AbstractUser):
@@ -132,4 +133,5 @@ class TermConflictingTerm(models.Model):
 
 class BugReports(models.Model):
     user = models.ForeignKey('User')
-    message = models.CharField('massage', max_length=255)
+    message = models.CharField('message', max_length=255)
+    date = models.DateTimeField('date')

@@ -144,7 +144,7 @@ def export_data(request, enrollment=None):
         for student, assignments in groupby(mapping, attrgetter('user')):
             f.write('[%s]\n' % student.transcript_no)
             for assignment in assignments:
-                f.write('%s:%s\n' % (assignment.term.subject.name, assignment.term))
+                f.write('%s\n' % (assignment.term))
     response = HttpResponse(FileWrapper(open(filename)), content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=export.csv'
     delete_file.apply_async(countdown=120, args=[filename])
